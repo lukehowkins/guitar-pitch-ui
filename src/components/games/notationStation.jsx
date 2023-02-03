@@ -5,7 +5,7 @@ import SingleStave from '../singleStave';
 
 export default function NotationStation() {
   const key = getRandomKey();
-  const note = getStaveNote(`${getRandomNote()}/4`, key);
+  const note = getStaveNote(getRandomNote(), key);
 
   return (
     <div>

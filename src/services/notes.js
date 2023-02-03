@@ -36,21 +36,26 @@ const addModifier =
     if (accidental) staveNote.addModifier(new Accidental(accidental), index);
   };
 
-export const getNoteAbove = (baseNote, interval) => {
+const getNoteAboveBelow = (isAbove, baseNote, interval) => {
   const { note, oct } = getNoteInfo(baseNote);
   const index = NOTES.findIndex((value) => value === note || value === EQUIVALENT_NOTES[note]);
   const step = INTERVALS[interval];
 
   if (!step) throw new Error(`unknown interval ${interval}`);
 
-  const newIndex = index + step;
-  const octIncrease = Math.floor(newIndex / 12);
+  const newIndex = isAbove ? index + step : index - step;
+  const octChange = Math.floor(newIndex / 12);
+  let mod = newIndex % 12;
+  if (mod < 0) mod += 12;
+  let newNote = NOTES[mod];
+  if (newNote.includes('b') && baseNote.includes('#')) newNote = EQUIVALENT_NOTES[newNote];
+  else if (newNote.includes('#') && baseNote.includes('b')) newNote = EQUIVALENT_NOTES[newNote];
 
-  if (octIncrease) {
-    return `${NOTES[newIndex % 12]}/${oct + octIncrease}`;
-  }
-  return `${NOTES[newIndex]}/${oct}`;
+  return `${newNote}/${oct + octChange}`;
 };
+
+export const getNoteAbove = getNoteAboveBelow.bind(null, true);
+export const getNoteBelow = getNoteAboveBelow.bind(null, false);
 
 export const getStaveNote = (pitch, keySignature = 'C') => {
   const staveNote = new StaveNote({ keys: [pitch], duration: 4 });

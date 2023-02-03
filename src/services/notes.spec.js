@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getStaveNote, getNoteAbove, getStaveChord } from './notes';
+import { getStaveNote, getNoteAbove, getStaveChord, getNoteBelow } from './notes';
 
 describe('notes', () => {
   describe('getStaveNote', () => {
@@ -48,6 +48,7 @@ describe('notes', () => {
       expect(note4.keys).toEqual(['Bb/4']);
     });
   });
+
   describe('getStaveChord', () => {
     it('should throw error', () => {
       expect(() => getStaveChord()).toThrow();
@@ -111,16 +112,35 @@ describe('notes', () => {
     it('should return note in same octave', () => {
       expect(getNoteAbove('D/3', 'm3')).toEqual('F/3');
       expect(getNoteAbove('D/4', 'M3')).toEqual('F#/4');
-      expect(getNoteAbove('Gb/3', 'P4')).toEqual('Bb/3');
+      expect(getNoteAbove('Eb/3', 'P4')).toEqual('Ab/3');
       expect(getNoteAbove('Eb/3', 'm2')).toEqual('E/3');
       expect(getNoteAbove('C#/3', 'P5')).toEqual('G#/3');
+      expect(getNoteAbove('Db/3', 'P5')).toEqual('Ab/3');
     });
 
     it('should return note in diff octave', () => {
       expect(getNoteAbove('Bb/3', 'M3')).toEqual('D/4');
       expect(getNoteAbove('A/3', 'P8')).toEqual('A/4');
-      expect(getNoteAbove('F#/3', 'M13')).toEqual('Eb/5');
+      expect(getNoteAbove('F#/3', 'M13')).toEqual('D#/5');
       expect(getNoteAbove('Bb/4', '2 octaves')).toEqual('Bb/6');
+    });
+  });
+
+  describe('getNoteBelow', () => {
+    it('should return note in same octave', () => {
+      expect(getNoteBelow('F/3', 'm3')).toEqual('D/3');
+      expect(getNoteBelow('F#/4', 'M3')).toEqual('D/4');
+      expect(getNoteBelow('Ab/3', 'P4')).toEqual('Eb/3');
+      expect(getNoteBelow('E/3', 'm2')).toEqual('Eb/3');
+      expect(getNoteBelow('G#/3', 'P5')).toEqual('C#/3');
+      expect(getNoteBelow('Ab/3', 'P5')).toEqual('Db/3');
+    });
+
+    it('should return note in diff octave', () => {
+      expect(getNoteBelow('D/4', 'M3')).toEqual('Bb/3');
+      expect(getNoteBelow('A/4', 'P8')).toEqual('A/3');
+      expect(getNoteBelow('D#/5', 'M13')).toEqual('F#/3');
+      expect(getNoteBelow('Bb/6', '2 octaves')).toEqual('Bb/4');
     });
   });
 });

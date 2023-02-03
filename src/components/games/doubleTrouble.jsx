@@ -5,7 +5,7 @@ import SingleStave from '../singleStave';
 
 export default function DoubleTrouble() {
   const key = getRandomKey();
-  const baseNote = `${getRandomNote()}/4`;
+  const baseNote = getRandomNote();
   const interval = getRandomInterval(3, 8);
   const chord = getStaveChord([baseNote, getNoteAbove(baseNote, interval)], key);
   return (
