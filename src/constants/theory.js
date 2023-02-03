@@ -30,3 +30,50 @@ export const KEYS = {
   Ebm: ['Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'],
   Abm: ['Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'Fb'],
 };
+
+export const NOTES = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
+
+export const EQUIVALENT_NOTES = {
+  'C#': 'Db',
+  'D#': 'Eb',
+  'E#': 'F',
+  'F#': 'Gb',
+  'G#': 'Ab',
+  'A#': 'Bb',
+  'B#': 'C',
+  Cb: 'B',
+  Db: 'C#',
+  Eb: 'D#',
+  Fb: 'E#',
+  Gb: 'F',
+  Ab: 'G#',
+  Bb: 'A#',
+};
+
+export const INTERVALS = {
+  P1: 0,
+  m2: 1,
+  M2: 2,
+  m3: 3,
+  M3: 4,
+  P4: 5,
+  d5: 6,
+  P5: 7,
+  m6: 8,
+  M6: 9,
+  m7: 10,
+  M7: 11,
+  P8: 12, // octave
+  m9: 13,
+  M9: 14,
+  m10: 15,
+  M10: 16,
+  P11: 17,
+  d12: 18,
+  P12: 19,
+  m13: 20,
+  M13: 21,
+  m14: 22,
+  M14: 23,
+  '2 octaves': 24,
+};

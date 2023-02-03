@@ -1,11 +1,11 @@
 import React from 'react';
 import { getRandomKey, getRandomNote } from '../../services/mock';
-import { getNote } from '../../services/notes';
+import { getStaveNote } from '../../services/notes';
 import SingleStave from '../singleStave';
 
 export default function NotationStation() {
   const key = getRandomKey();
-  const note = getNote(getRandomNote(), 4, key);
+  const note = getStaveNote(`${getRandomNote()}/4`, key);
 
   return (
     <div>

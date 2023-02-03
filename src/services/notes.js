@@ -1,8 +1,9 @@
 import { Accidental, StaveNote } from 'vexflow';
-import { KEYS } from '../constants/theory';
+import { EQUIVALENT_NOTES, INTERVALS, KEYS, NOTES } from '../constants/theory';
 
 const getAccidental = (note, key = 'C') => {
   const nonAccidentals = KEYS[key];
+  if (!nonAccidentals) throw new Error(`key ${key} is unknown`);
   if (note.includes('#') && !nonAccidentals.includes(note)) {
     return '#';
   }
@@ -20,11 +21,48 @@ const getAccidental = (note, key = 'C') => {
   return '';
 };
 
-export const getNote = (note, oct, key = 'C') => {
-  const staveNote = new StaveNote({ keys: [`${note}/${oct}`], duration: 4 });
-  const accidental = getAccidental(note, key);
+const getNoteInfo = (key = '') => {
+  const [note, oct] = key.split('/');
+  if (!oct) throw new Error('Note missing octave value');
+  return { note, oct: +oct };
+};
 
-  if (accidental) staveNote.addModifier(new Accidental(accidental));
+const addModifier =
+  (staveNote, keySignature) =>
+  (pitch, index = 0) => {
+    const { note } = getNoteInfo(pitch);
+    const accidental = getAccidental(note, keySignature);
+
+    if (accidental) staveNote.addModifier(new Accidental(accidental), index);
+  };
+
+export const getNoteAbove = (baseNote, interval) => {
+  const { note, oct } = getNoteInfo(baseNote);
+  const index = NOTES.findIndex((value) => value === note || value === EQUIVALENT_NOTES[note]);
+  const step = INTERVALS[interval];
+
+  if (!step) throw new Error(`unknown interval ${interval}`);
+
+  const newIndex = index + step;
+  const octIncrease = Math.floor(newIndex / 12);
+
+  if (octIncrease) {
+    return `${NOTES[newIndex % 12]}/${oct + octIncrease}`;
+  }
+  return `${NOTES[newIndex]}/${oct}`;
+};
+
+export const getStaveNote = (pitch, keySignature = 'C') => {
+  const staveNote = new StaveNote({ keys: [pitch], duration: 4 });
+  addModifier(staveNote, keySignature)(pitch);
+
+  return staveNote;
+};
+
+export const getStaveChord = (keys, keySignature = 'C') => {
+  const staveNote = new StaveNote({ keys, duration: 4 });
+
+  keys.forEach(addModifier(staveNote, keySignature));
 
   return staveNote;
 };
