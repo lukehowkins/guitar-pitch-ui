@@ -18,3 +18,6 @@ requires node 18
 
 - vitest is only unit, [integrate with RTL](https://www.robinwieruch.de/vitest-react-testing-library/)
 - MIDI
+- Selecting game
+- Multiple one after the other
+- Guitar fret board

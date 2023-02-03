@@ -36,7 +36,7 @@ const addModifier =
     if (accidental) staveNote.addModifier(new Accidental(accidental), index);
   };
 
-const getNoteAboveBelow = (isAbove, baseNote, interval) => {
+export const getNoteAboveBelow = (isAbove, baseNote, interval) => {
   const { note, oct } = getNoteInfo(baseNote);
   const index = NOTES.findIndex((value) => value === note || value === EQUIVALENT_NOTES[note]);
   const step = INTERVALS[interval];
