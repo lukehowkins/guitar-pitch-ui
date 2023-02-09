@@ -4,7 +4,7 @@ const MIN_WIDTH = 250;
 const MIN_WIDTH_PER_NOTE = 100;
 
 export const generateStaveWithNotes = (ref, notes, key = 'C') => {
-  const height = 150;
+  const height = 180;
   ref.innerHTML = '';
   const width = Math.min(Math.max(ref.clientWidth, MIN_WIDTH), notes.length * MIN_WIDTH_PER_NOTE + 200);
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
