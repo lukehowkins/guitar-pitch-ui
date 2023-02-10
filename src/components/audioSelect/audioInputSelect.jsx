@@ -5,22 +5,25 @@ import Error from '../error';
 
 export default function AudioInputSelect({ onSelect }) {
   const [inputs, setInputs] = useState();
+
   useEffect(() => {
     getAudioInputs().then(setInputs, () => setInputs([]));
   }, []);
 
   if (!inputs) return <p>Loading...</p>;
 
-  if (!inputs.length) return <Error message="Could not find any audio inputs" />;
+  if (!inputs.length) {
+    return <Error message="Could not find any audio inputs. Please make sure you give permission to use microphone" />;
+  }
 
   return (
     <div>
       <h3>Select your preferred audio input</h3>
-      {inputs.map((input) => {
+      {inputs.map((input, index) => {
         return (
           <label key={input.deviceId} className="audio-select__radio">
             <input value={input.deviceId} type="radio" onClick={() => onSelect(input.deviceId)} />
-            {input.label}
+            {input.label || `Mic ${index + 1}`}
           </label>
         );
       })}

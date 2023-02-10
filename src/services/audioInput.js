@@ -1,13 +1,14 @@
 let stream;
 let mediaRecorder;
 
-export const getAudioInputs = async () => {
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  return devices.filter(({ kind }) => kind === 'audioinput');
-};
-
 export const getAudioStream = (preferredDeviceId = 'default') => {
   return navigator.mediaDevices.getUserMedia({ audio: { deviceId: preferredDeviceId } });
+};
+
+export const getAudioInputs = async () => {
+  await getAudioStream(); // to get permission
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  return devices.filter(({ kind }) => kind === 'audioinput');
 };
 
 export const startRecording = async (preferredDeviceId, onData) => {
