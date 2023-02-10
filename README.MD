@@ -17,7 +17,8 @@ requires node 18
 ## TODO
 
 - vitest is only unit, [integrate with RTL](https://www.robinwieruch.de/vitest-react-testing-library/)
-- MIDI
-- Selecting game
-- Multiple one after the other
-- Guitar fret board
+- transpose oct for Guitar
+- link MIDI/audio to game
+- Guitar fret board - make something similar to https://www.npmjs.com/package/chord-illustrator
+- Selecting game / difficulty / fret area
+- Link to a Backend

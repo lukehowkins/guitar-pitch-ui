@@ -1,8 +1,9 @@
 import './audioSelect.css';
 import React, { useEffect, useState } from 'react';
-import { getAudioInputs } from '../services/audioInput';
+import { getAudioInputs } from '../../services/audioInput';
+import Error from '../error';
 
-export default function AudioSelect({ onSelect }) {
+export default function AudioInputSelect({ onSelect }) {
   const [inputs, setInputs] = useState();
   useEffect(() => {
     getAudioInputs().then(setInputs, () => setInputs([]));
@@ -10,7 +11,7 @@ export default function AudioSelect({ onSelect }) {
 
   if (!inputs) return <p>Loading...</p>;
 
-  if (!inputs.length) return <p>Could not find any audio inputs </p>;
+  if (!inputs.length) return <Error message="Could not find any audio inputs" />;
 
   return (
     <div>

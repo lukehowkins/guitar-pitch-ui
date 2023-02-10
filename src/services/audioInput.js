@@ -10,11 +10,11 @@ export const getAudioStream = (preferredDeviceId = 'default') => {
   return navigator.mediaDevices.getUserMedia({ audio: { deviceId: preferredDeviceId } });
 };
 
-export const startRecording = async (onData) => {
+export const startRecording = async (preferredDeviceId, onData) => {
   stream = undefined;
   mediaRecorder = undefined;
 
-  const stream = await getAudioStream();
+  stream = await getAudioStream(preferredDeviceId);
   mediaRecorder = new MediaRecorder(stream);
   mediaRecorder.start();
 
