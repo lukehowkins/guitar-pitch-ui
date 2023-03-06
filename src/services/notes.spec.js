@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getStaveNote, getNoteAbove, getStaveChord, getNoteBelow } from './notes';
+import { getStaveNote, getNoteAbove, getStaveChord, getNoteBelow, isNoteBelow, getStepDiff } from './notes';
 
 describe('notes', () => {
   describe('getStaveNote', () => {
@@ -141,6 +141,24 @@ describe('notes', () => {
       expect(getNoteBelow('A/4', 'P8')).toEqual('A/3');
       expect(getNoteBelow('D#/5', 'M13')).toEqual('F#/3');
       expect(getNoteBelow('Bb/6', '2 octaves')).toEqual('Bb/4');
+    });
+  });
+
+  describe('getStepDiff', () => {
+    it('should return step for same oct', () => {
+      expect(getStepDiff('Bb/3', 'A/3')).toBe(-1);
+      expect(getStepDiff('E/2', 'E/2')).toBe(0);
+      expect(getStepDiff('A/3', 'Bb/3')).toBe(1);
+      expect(getStepDiff('C/3', 'G/3')).toBe(7);
+      expect(getStepDiff('G#/4', 'B/4')).toBe(3);
+    });
+
+    it('should return step for diff oct', () => {
+      expect(getStepDiff('D/4', 'D/2')).toBe(-24);
+      expect(getStepDiff('Ab/2', 'G#/3')).toBe(12);
+      expect(getStepDiff('B/3', 'C/4')).toBe(1);
+      expect(getStepDiff('C/3', 'Bb/2')).toBe(-2);
+      expect(getStepDiff('D/3', 'F/4')).toBe(15);
     });
   });
 });

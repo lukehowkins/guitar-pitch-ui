@@ -3,6 +3,7 @@ import AudioSelect from './components/audioSelect/audioSelect';
 import AudioVisualiser from './components/audioVisualiser';
 import Game from './components/game';
 import { GuitarFretboard } from './components/guitarFredboard';
+import { getStringFret } from './services/guitar';
 
 export default function App() {
   const [{ type, preferredDeviceId }, setData] = useState({});
@@ -13,21 +14,17 @@ export default function App() {
       {type ? (
         <>
           <Game />
-          <p>Sound not linked to game yet!</p>
-          <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} />
         </>
       ) : (
         <AudioSelect onSelect={setData} />
       )}
       <>
+        <br />
+        <h4>Testing area</h4>
+        <p>Sound not linked to game yet!</p>
+        <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} />
         <p>Static Fretboard not linked</p>
-        <GuitarFretboard
-          notes={{
-            1: 2,
-            2: 3,
-            3: 2,
-          }}
-        />
+        <GuitarFretboard notes={[getStringFret('E/3'), getStringFret('G/3'), getStringFret('C/4')]} />
       </>
     </div>
   );

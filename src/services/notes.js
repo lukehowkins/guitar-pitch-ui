@@ -57,6 +57,19 @@ export const getNoteAboveBelow = (isAbove, baseNote, interval) => {
 export const getNoteAbove = getNoteAboveBelow.bind(null, true);
 export const getNoteBelow = getNoteAboveBelow.bind(null, false);
 
+const getNoteIndex = (noteInfo) =>
+  NOTES.findIndex((note) => noteInfo.note === note || EQUIVALENT_NOTES[noteInfo.note] === note);
+
+export const getStepDiff = (baseNote, note) => {
+  const baseNoteInfo = getNoteInfo(baseNote);
+  const noteInfo = getNoteInfo(note);
+
+  const octDiff = (noteInfo.oct - baseNoteInfo.oct) * 12;
+  const indexDiff = getNoteIndex(noteInfo) - getNoteIndex(baseNoteInfo);
+
+  return octDiff + indexDiff;
+};
+
 export const getStaveNote = (pitch, keySignature = 'C') => {
   const staveNote = new StaveNote({ keys: [pitch], duration: 4 });
   addModifier(staveNote, keySignature)(pitch);
