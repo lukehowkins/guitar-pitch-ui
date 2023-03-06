@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AudioSelect from './components/audioSelect/audioSelect';
 import AudioVisualiser from './components/audioVisualiser';
 import Game from './components/game';
+import { GuitarFretboard } from './components/guitarFredboard';
 
 export default function App() {
   const [{ type, preferredDeviceId }, setData] = useState({});
@@ -18,6 +19,16 @@ export default function App() {
       ) : (
         <AudioSelect onSelect={setData} />
       )}
+      <>
+        <p>Static Fretboard not linked</p>
+        <GuitarFretboard
+          notes={{
+            1: 2,
+            2: 3,
+            3: 2,
+          }}
+        />
+      </>
     </div>
   );
 }
