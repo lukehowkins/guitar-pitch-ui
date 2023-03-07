@@ -1,7 +1,7 @@
 import { getStepDiff } from './notes';
 
 // Standard tuning only
-export const getStringFret = (note, lowestFret = 0, highestFret = 24) => {
+export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => {
   const string6Fret = getStepDiff('E/2', note);
   if (string6Fret < lowestFret) throw new Error('Note too low');
   const string5Fret = getStepDiff('A/2', note);
@@ -19,4 +19,29 @@ export const getStringFret = (note, lowestFret = 0, highestFret = 24) => {
   if (lowestFret <= string6Fret && string6Fret <= highestFret) return { string: 6, fret: string6Fret };
 
   throw new Error(`Could not place note on guitar fret between ${lowestFret} and ${highestFret}`);
+};
+
+export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) => {
+  if (lowestFret >= highestFret) throw new Error('Could not position on fretboard');
+  let ranges = [];
+
+  const positions = notes.map((note) => {
+    const lowest = ranges.reduce((acc, [current]) => Math.min(acc, current), lowestFret);
+    const highest = ranges.reduce((acc, [, current]) => Math.max(acc, current), highestFret);
+    const position = getFretboardPosition(note, lowest, highest);
+    ranges.push([Math.max(lowestFret, position.fret - 4), Math.min(highestFret, position.fret + 4)]);
+    return position;
+  });
+
+  const strings = positions.map(({ string }) => string);
+  const distinctStrings = [...new Set(strings)];
+  if (strings.length !== distinctStrings.length) {
+    try {
+      return getFretboardPositions(notes, lowestFret + 1, highestFret);
+    } catch {
+      throw new Error('Could not place notes on guitar fret');
+    }
+  }
+
+  return positions.sort((a, b) => b.string - a.string);
 };
