@@ -70,6 +70,11 @@ export const getStepDiff = (baseNote, note) => {
   return octDiff + indexDiff;
 };
 
+export const areChordsSame = (chord1, chord2) => {
+  return chord1?.length === chord2?.length && chord1.every((value, index) => value === chord2[index]);
+};
+
+// should stave note be moved to own service?
 export const getStaveNote = (pitch, keySignature = 'C') => {
   const staveNote = new StaveNote({ keys: [pitch], duration: 4 });
   addModifier(staveNote, keySignature)(pitch);

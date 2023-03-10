@@ -3,10 +3,15 @@ import AudioSelect from './components/audioSelect/audioSelect';
 import AudioVisualiser from './components/audioVisualiser';
 import Game from './components/game';
 import { GuitarFretboard } from './components/guitarFredboard';
+import { KeyboardFlow } from './components/keyboardFlow';
 import { getFretboardPositions } from './services/guitar';
+
+const MOCK_FLOW = true;
 
 export default function App() {
   const [{ type, preferredDeviceId }, setData] = useState({});
+
+  if (MOCK_FLOW) return <KeyboardFlow />;
 
   return (
     <div>

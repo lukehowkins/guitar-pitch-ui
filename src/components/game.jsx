@@ -4,10 +4,17 @@ import { DoubleTrouble, IntervalBoss, NotationStation, TriadMaster } from './gam
 
 const GAMES = [NotationStation, DoubleTrouble, TriadMaster, IntervalBoss];
 
-export default function Game() {
+export default function Game({ answer, onNext }) {
   const [turnCount, setTurnCount] = useState(0);
+  const [score, setScore] = useState(0);
   const [gameSetup, setGameSetup] = useState(null);
   const CurrentGame = GAMES[turnCount % 4];
+
+  const handleNext = (isCorrect) => {
+    setTurnCount(turnCount + 1);
+    if (isCorrect) setScore(score + 1);
+    onNext();
+  };
 
   useEffect(() => {
     setGameSetup({
@@ -21,15 +28,12 @@ export default function Game() {
 
   if (!gameSetup) return <div>Loading...</div>;
 
-  const onComplete = () => {
-    setTurnCount(turnCount + 1);
-  };
-
   return (
     <div>
-      <div>Turn {turnCount + 1}</div>
-      <CurrentGame {...gameSetup} />
-      <button onClick={onComplete}>Next</button>
+      <div>
+        Turn {turnCount + 1}. Score {score}
+      </div>
+      <CurrentGame {...gameSetup} answer={answer} onDone={handleNext} />
     </div>
   );
 }

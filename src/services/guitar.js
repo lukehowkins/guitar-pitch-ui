@@ -21,6 +21,7 @@ export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => 
   throw new Error(`Could not place note on guitar fret between ${lowestFret} and ${highestFret}`);
 };
 
+// sort notes and do not put lowest note any higher that would block you putting next note on
 export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) => {
   if (lowestFret >= highestFret) throw new Error('Could not position on fretboard');
   let ranges = [];
