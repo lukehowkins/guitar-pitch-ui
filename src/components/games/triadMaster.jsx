@@ -1,6 +1,7 @@
 import React from 'react';
 import { getFretboardPositions } from '../../services/guitar';
-import { areChordsSame, getStaveChord } from '../../services/notes';
+import { areChordsSame } from '../../services/notes';
+import { getStaveChord } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
 import SingleStave from '../singleStave';
 

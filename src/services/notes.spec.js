@@ -1,113 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { getStaveNote, getNoteAbove, getStaveChord, getNoteBelow, isNoteBelow, getStepDiff } from './notes';
+import { getNoteAbove, getNoteBelow, getStepDiff, getNoteInfo, areChordsSame, areNotesSame, shiftOct } from './notes';
 
 describe('notes', () => {
-  describe('getStaveNote', () => {
-    it('should throw error', () => {
-      expect(() => getStaveNote()).toThrow();
-      expect(() => getStaveNote('')).toThrow();
-      expect(() => getStaveNote('C')).toThrow();
-      expect(() => getStaveNote('C4')).toThrow();
-    });
-    it('should return note with no accidentals', () => {
-      const note = getStaveNote('C/4');
-      expect(note.duration).toEqual('4');
-      expect(note.modifiers).toHaveLength(0);
-      expect(note.keys).toEqual(['C/4']);
-
-      const note2 = getStaveNote('Bb/4', 'Dm');
-      expect(note2.duration).toEqual('4');
-      expect(note2.modifiers).toHaveLength(0);
-      expect(note2.keys).toEqual(['Bb/4']);
-
-      const note3 = getStaveNote('F#/4', 'G');
-      expect(note3.duration).toEqual('4');
-      expect(note3.modifiers).toHaveLength(0);
-      expect(note3.keys).toEqual(['F#/4']);
-    });
-
-    it('should return note with accidentals', () => {
-      const note = getStaveNote('C#/4');
-      expect(note.duration).toEqual('4');
-      expect(note.modifiers[0].accidental.code).toEqual('accidentalSharp');
-      expect(note.keys).toEqual(['C#/4']);
-
-      const note2 = getStaveNote('B/4', 'Dm');
-      expect(note2.duration).toEqual('4');
-      expect(note2.modifiers[0].accidental.code).toEqual('accidentalNatural');
-      expect(note2.keys).toEqual(['B/4']);
-
-      const note3 = getStaveNote('F/4', 'G');
-      expect(note3.duration).toEqual('4');
-      expect(note3.modifiers[0].accidental.code).toEqual('accidentalNatural');
-      expect(note3.keys).toEqual(['F/4']);
-
-      const note4 = getStaveNote('Bb/4', 'C#');
-      expect(note4.duration).toEqual('4');
-      expect(note4.modifiers[0].accidental.code).toEqual('accidentalFlat');
-      expect(note4.keys).toEqual(['Bb/4']);
-    });
-  });
-
-  describe('getStaveChord', () => {
-    it('should throw error', () => {
-      expect(() => getStaveChord()).toThrow();
-      expect(() => getStaveChord([])).toThrow();
-      expect(() => getStaveChord(['C'])).toThrow();
-      expect(() => getStaveChord(['C4'])).toThrow();
-    });
-
-    it('should return chord with no accidentals', () => {
-      const chord = getStaveChord(['C/4', 'E/4', 'G/4']);
-      expect(chord.duration).toEqual('4');
-      expect(chord.modifiers).toHaveLength(0);
-      expect(chord.keys).toEqual(['C/4', 'E/4', 'G/4']);
-
-      const chord2 = getStaveChord(['Bb/4', 'D/5'], 'Dm');
-      expect(chord2.duration).toEqual('4');
-      expect(chord2.modifiers).toHaveLength(0);
-      expect(chord2.keys).toEqual(['Bb/4', 'D/5']);
-
-      const chord3 = getStaveChord(['F#/4', 'C/5'], 'G');
-      expect(chord3.duration).toEqual('4');
-      expect(chord3.modifiers).toHaveLength(0);
-      expect(chord3.keys).toEqual(['F#/4', 'C/5']);
-    });
-
-    it('should return chord with accidentals', () => {
-      const chord = getStaveChord(['C#/4', 'E#/5', 'G#/5']);
-      expect(chord.duration).toEqual('4');
-      expect(chord.modifiers).toHaveLength(3);
-      expect(chord.modifiers[0].accidental.code).toEqual('accidentalSharp');
-      expect(chord.modifiers[1].accidental.code).toEqual('accidentalSharp');
-      expect(chord.modifiers[2].accidental.code).toEqual('accidentalSharp');
-      expect(chord.keys).toEqual(['C#/4', 'E#/5', 'G#/5']);
-
-      const chord2 = getStaveChord(['B/4', 'D/5'], 'Dm');
-      expect(chord2.duration).toEqual('4');
-      expect(chord2.modifiers).toHaveLength(1);
-      expect(chord2.modifiers[0].accidental.code).toEqual('accidentalNatural');
-      expect(chord2.modifiers[0].index).toEqual(0);
-      expect(chord2.keys).toEqual(['B/4', 'D/5']);
-
-      const chord3 = getStaveChord(['A/3', 'F/4'], 'G');
-      expect(chord3.duration).toEqual('4');
-      expect(chord3.modifiers).toHaveLength(1);
-      expect(chord3.modifiers[0].accidental.code).toEqual('accidentalNatural');
-      expect(chord3.modifiers[0].index).toEqual(1);
-      expect(chord3.keys).toEqual(['A/3', 'F/4']);
-
-      const chord4 = getStaveChord(['Bb/4', 'D#/5', 'F/5'], 'C#');
-      expect(chord4.duration).toEqual('4');
-      expect(chord4.modifiers).toHaveLength(2);
-      expect(chord4.modifiers[0].accidental.code).toEqual('accidentalFlat');
-      expect(chord4.modifiers[0].index).toEqual(0);
-      expect(chord4.modifiers[1].accidental.code).toEqual('accidentalNatural');
-      expect(chord4.modifiers[1].index).toEqual(2);
-      expect(chord4.keys).toEqual(['Bb/4', 'D#/5', 'F/5']);
-    });
-  });
-
   describe('getNoteAbove', () => {
     it('should return note in same octave', () => {
       expect(getNoteAbove('D/3', 'm3')).toEqual('F/3');
@@ -140,7 +34,7 @@ describe('notes', () => {
       expect(getNoteBelow('D/4', 'M3')).toEqual('Bb/3');
       expect(getNoteBelow('A/4', 'P8')).toEqual('A/3');
       expect(getNoteBelow('D#/5', 'M13')).toEqual('F#/3');
-      expect(getNoteBelow('Bb/6', '2 octaves')).toEqual('Bb/4');
+      expect(getNoteBelow('Bb/5', '2 octaves')).toEqual('Bb/3');
     });
   });
 
@@ -154,11 +48,76 @@ describe('notes', () => {
     });
 
     it('should return step for diff oct', () => {
-      expect(getStepDiff('D/4', 'D/2')).toBe(-24);
+      expect(getStepDiff('D/5', 'D/3')).toBe(-24);
       expect(getStepDiff('Ab/2', 'G#/3')).toBe(12);
       expect(getStepDiff('B/3', 'C/4')).toBe(1);
       expect(getStepDiff('C/3', 'Bb/2')).toBe(-2);
       expect(getStepDiff('D/3', 'F/4')).toBe(15);
+    });
+  });
+
+  describe('getNoteInfo', () => {
+    it('should throw error', () => {
+      expect(() => getNoteInfo()).toThrowError(new Error('Note missing'));
+      expect(() => getNoteInfo('')).toThrowError(new Error('Note missing'));
+      expect(() => getNoteInfo('C')).toThrowError(new Error('Octave missing'));
+      expect(() => getNoteInfo('C/1')).toThrowError(new Error('Octave too low'));
+      expect(() => getNoteInfo('C/10')).toThrowError(new Error('Octave too high'));
+      expect(() => getNoteInfo('F/6')).toThrowError(new Error('Note too high'));
+      expect(() => getNoteInfo('D/2')).toThrowError(new Error('Note too low'));
+      expect(() => getNoteInfo('L/3')).toThrowError(new Error('Invalid note'));
+      expect(() => getNoteInfo('ABC/3')).toThrowError(new Error('Invalid note'));
+      expect(() => getNoteInfo('bb/4')).toThrowError(new Error('Invalid note'));
+    });
+
+    it('should get note info', () => {
+      expect(getNoteInfo('Bb/4')).toEqual({ note: 'Bb', oct: 4 });
+      expect(getNoteInfo('C/5')).toEqual({ note: 'C', oct: 5 });
+      expect(getNoteInfo('F#/3')).toEqual({ note: 'F#', oct: 3 });
+    });
+  });
+
+  describe('areNotesSame', () => {
+    it('should return true', () => {
+      expect(areNotesSame('C/4', 'C/4')).toBe(true);
+      expect(areNotesSame('Eb/6', 'Eb/6')).toBe(true);
+      expect(areNotesSame('D#/3', 'D#/3')).toBe(true);
+      expect(areNotesSame('F#/5', 'Gb/5')).toBe(true);
+    });
+
+    it('should return false', () => {
+      expect(areNotesSame('C/4', 'C/5')).toBe(false);
+      expect(areNotesSame('D/6', 'Eb/6')).toBe(false);
+    });
+
+    it('should throw error', () => {
+      expect(() => areNotesSame()).toThrowError(new Error('Note missing'));
+      expect(() => areNotesSame('C/4')).toThrowError(new Error('Note missing'));
+      expect(() => areNotesSame('C/4', 'E/1')).toThrowError(new Error('Octave too low'));
+    });
+  });
+
+  describe('areChordsSame', () => {
+    it('should return true', () => {
+      expect(areChordsSame(['G/4', 'C/4'], ['G/4', 'C/4'])).toEqual(true);
+      expect(areChordsSame(['G/4', 'C/4'], ['C/4', 'G/4'])).toEqual(true);
+      expect(areChordsSame(['D/3', 'F#/3', 'A/3'], ['D/3', 'Gb/3', 'A/3'])).toEqual(true);
+      expect(areChordsSame(['Bb/5', 'Eb/3'], ['Eb/3', 'Bb/5'])).toEqual(true);
+    });
+    it('should return false', () => {
+      expect(areChordsSame(['G/4', 'C/4'], ['G/4'])).toEqual(false);
+      expect(areChordsSame(['G/4'], ['C/4', 'G/4'])).toEqual(false);
+      expect(areChordsSame(['D/3', 'F#/3', 'A/3'], ['D/3', 'D/3', 'D/3'])).toEqual(false);
+      expect(areChordsSame(['D/3', 'D/3', 'D/3'], ['D/3', 'F#/3', 'A/3'])).toEqual(false);
+      expect(areChordsSame(['D/3', 'F#/3', 'A/3'], ['D/3', 'F#/4', 'A/3'])).toEqual(false);
+    });
+  });
+
+  describe('shiftOct', () => {
+    it('should shift note', () => {
+      expect(shiftOct('C/3', 1)).toEqual('C/4');
+      expect(shiftOct('C/3', -1)).toEqual('C/2');
+      expect(shiftOct('E/2', 2)).toEqual('E/4');
     });
   });
 });

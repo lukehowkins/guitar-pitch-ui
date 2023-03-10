@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MIC, MIDI } from '../constants/inputTypes';
 import { startRecording, stopRecording } from '../services/audioInput';
 import { setMidiConnection } from '../services/midi';
-import { getStaveNote } from '../services/notes';
+import { getStaveNote } from '../services/staveNotes';
 import SingleStave from './singleStave';
 
 export default function AudioVisualiser({ inputType, preferredDeviceId }) {

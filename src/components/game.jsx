@@ -19,7 +19,7 @@ export default function Game({ answer, onNext }) {
   useEffect(() => {
     setGameSetup({
       keySignature: getRandomKey(),
-      note: getRandomNote(),
+      note: getRandomNote('Bb/2', 'Bb/5'),
       triad: getRandomTriad(),
       interval: getRandomInterval(3, 8),
       isAbove: Math.random() > 0.5,

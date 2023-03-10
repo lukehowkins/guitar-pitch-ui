@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getFretboardPosition } from '../../services/guitar';
-import { getStaveNote } from '../../services/notes';
+import { getStaveNote } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
 import SingleStave from '../singleStave';
 

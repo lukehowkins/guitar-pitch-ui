@@ -1,40 +1,4 @@
-import { Accidental, StaveNote } from 'vexflow';
-import { EQUIVALENT_NOTES, INTERVALS, KEYS, NOTES } from '../constants/theory';
-
-const getAccidental = (note, key = 'C') => {
-  const nonAccidentals = KEYS[key];
-  if (!nonAccidentals) throw new Error(`key ${key} is unknown`);
-  if (note.includes('#') && !nonAccidentals.includes(note)) {
-    return '#';
-  }
-
-  if (note.includes('b') && !nonAccidentals.includes(note)) {
-    return 'b';
-  }
-
-  if (
-    (!note.includes('b') && nonAccidentals.includes(`${note}b`)) ||
-    (!note.includes('#') && nonAccidentals.includes(`${note}#`))
-  ) {
-    return 'n';
-  }
-  return '';
-};
-
-const getNoteInfo = (key = '') => {
-  const [note, oct] = key.split('/');
-  if (!oct) throw new Error('Note missing octave value');
-  return { note, oct: +oct };
-};
-
-const addModifier =
-  (staveNote, keySignature) =>
-  (pitch, index = 0) => {
-    const { note } = getNoteInfo(pitch);
-    const accidental = getAccidental(note, keySignature);
-
-    if (accidental) staveNote.addModifier(new Accidental(accidental), index);
-  };
+import { EQUIVALENT_NOTES, INTERVALS, NOTES } from '../constants/theory';
 
 export const getNoteAboveBelow = (isAbove, baseNote, interval) => {
   const { note, oct } = getNoteInfo(baseNote);
@@ -60,6 +24,20 @@ export const getNoteBelow = getNoteAboveBelow.bind(null, false);
 const getNoteIndex = (noteInfo) =>
   NOTES.findIndex((note) => noteInfo.note === note || EQUIVALENT_NOTES[noteInfo.note] === note);
 
+export const getNoteInfo = (key) => {
+  const [note, oct] = key?.split('/') || [];
+  if (!note) throw new Error('Note missing');
+  if (!oct) throw new Error('Octave missing');
+  if (oct < 2) throw new Error('Octave too low');
+  if (oct > 6) throw new Error('Octave too high');
+  if (note[0] > 'G' || note.length > 2 || (note[1] && note[1] !== '#' && note[1] !== 'b')) {
+    throw new Error('Invalid note');
+  }
+  if (oct == 6 && getNoteIndex({ note }) > NOTES.findIndex((note) => note === 'E')) throw new Error('Note too high');
+  if (oct == 2 && getNoteIndex({ note }) < NOTES.findIndex((note) => note === 'E')) throw new Error('Note too low');
+  return { note: note, oct: +oct };
+};
+
 export const getStepDiff = (baseNote, note) => {
   const baseNoteInfo = getNoteInfo(baseNote);
   const noteInfo = getNoteInfo(note);
@@ -70,22 +48,25 @@ export const getStepDiff = (baseNote, note) => {
   return octDiff + indexDiff;
 };
 
+export const areNotesSame = (note1, note2) => {
+  const note1Info = getNoteInfo(note1);
+  const note2Info = getNoteInfo(note2);
+
+  return (
+    note1Info.oct === note2Info.oct &&
+    (note1Info.note === note2Info.note || EQUIVALENT_NOTES[note1Info.note] === note2Info.note)
+  );
+};
+
 export const areChordsSame = (chord1, chord2) => {
-  return chord1?.length === chord2?.length && chord1.every((value, index) => value === chord2[index]);
+  return (
+    chord1?.length === chord2?.length &&
+    chord1.every((note1) => chord2.some((note2) => areNotesSame(note1, note2))) &&
+    chord2.every((note2) => chord1.some((note1) => areNotesSame(note1, note2)))
+  );
 };
 
-// should stave note be moved to own service?
-export const getStaveNote = (pitch, keySignature = 'C') => {
-  const staveNote = new StaveNote({ keys: [pitch], duration: 4 });
-  addModifier(staveNote, keySignature)(pitch);
-
-  return staveNote;
-};
-
-export const getStaveChord = (keys, keySignature = 'C') => {
-  const staveNote = new StaveNote({ keys, duration: 4 });
-
-  keys.forEach(addModifier(staveNote, keySignature));
-
-  return staveNote;
+export const shiftOct = (note, shift) => {
+  const noteInfo = getNoteInfo(note);
+  return `${noteInfo.note}/${noteInfo.oct + shift}`;
 };
