@@ -1,14 +1,16 @@
-import { getStepDiff } from './notes';
+import { getStepDiff, shiftOct } from './notes';
 
 // Standard tuning only
+// takes a display note and transposes to pitch
 export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => {
-  const string6Fret = getStepDiff('E/2', note);
+  const transposedNote = shiftOct(note, -1); // to pitch
+  const string6Fret = getStepDiff('E/2', transposedNote);
   if (string6Fret < lowestFret) throw new Error('Note too low');
-  const string5Fret = getStepDiff('A/2', note);
-  const string4Fret = getStepDiff('D/3', note);
-  const string3Fret = getStepDiff('G/3', note);
-  const string2Fret = getStepDiff('B/3', note);
-  const string1Fret = getStepDiff('E/4', note);
+  const string5Fret = getStepDiff('A/2', transposedNote);
+  const string4Fret = getStepDiff('D/3', transposedNote);
+  const string3Fret = getStepDiff('G/3', transposedNote);
+  const string2Fret = getStepDiff('B/3', transposedNote);
+  const string1Fret = getStepDiff('E/4', transposedNote);
   if (string1Fret > highestFret) throw new Error('Note too high');
 
   if (lowestFret <= string1Fret && string1Fret <= highestFret) return { string: 1, fret: string1Fret };
@@ -21,7 +23,7 @@ export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => 
   throw new Error(`Could not place note on guitar fret between ${lowestFret} and ${highestFret}`);
 };
 
-// sort notes and do not put lowest note any higher that would block you putting next note on
+// TODO sort notes and do not put lowest note any higher that would block you putting next note on
 export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) => {
   if (lowestFret >= highestFret) throw new Error('Could not position on fretboard');
   let ranges = [];

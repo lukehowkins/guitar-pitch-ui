@@ -17,9 +17,10 @@ export default function Game({ answer, onNext }) {
   };
 
   useEffect(() => {
+    // stave notes
     setGameSetup({
       keySignature: getRandomKey(),
-      note: getRandomNote('Bb/2', 'Bb/5'),
+      note: getRandomNote('Bb/3', 'Bb/6'), // should setup be based on game?
       triad: getRandomTriad(),
       interval: getRandomInterval(3, 8),
       isAbove: Math.random() > 0.5,

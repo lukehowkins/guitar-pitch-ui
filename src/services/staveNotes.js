@@ -32,14 +32,14 @@ const addModifier =
   };
 
 export const getStaveNote = (pitch, keySignature = 'C') => {
-  const staveNote = new StaveNote({ keys: [pitch], duration: 4 });
+  const staveNote = new StaveNote({ keys: [pitch], duration: 4, auto_stem: true });
   addModifier(staveNote, keySignature)(pitch);
 
   return staveNote;
 };
 
 export const getStaveChord = (keys, keySignature = 'C') => {
-  const staveNote = new StaveNote({ keys, duration: 4 });
+  const staveNote = new StaveNote({ keys, duration: 4, auto_stem: true });
 
   keys.forEach(addModifier(staveNote, keySignature));
 

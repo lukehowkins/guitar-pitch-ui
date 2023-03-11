@@ -24,16 +24,17 @@ export const getNoteBelow = getNoteAboveBelow.bind(null, false);
 const getNoteIndex = (noteInfo) =>
   NOTES.findIndex((note) => noteInfo.note === note || EQUIVALENT_NOTES[noteInfo.note] === note);
 
+// should this be unrelated to guitar limitations?
 export const getNoteInfo = (key) => {
   const [note, oct] = key?.split('/') || [];
   if (!note) throw new Error('Note missing');
   if (!oct) throw new Error('Octave missing');
   if (oct < 2) throw new Error('Octave too low');
-  if (oct > 6) throw new Error('Octave too high');
+  if (oct > 7) throw new Error('Octave too high');
   if (note[0] > 'G' || note.length > 2 || (note[1] && note[1] !== '#' && note[1] !== 'b')) {
     throw new Error('Invalid note');
   }
-  if (oct == 6 && getNoteIndex({ note }) > NOTES.findIndex((note) => note === 'E')) throw new Error('Note too high');
+  if (oct == 7 && getNoteIndex({ note }) > NOTES.findIndex((note) => note === 'E')) throw new Error('Note too high');
   if (oct == 2 && getNoteIndex({ note }) < NOTES.findIndex((note) => note === 'E')) throw new Error('Note too low');
   return { note: note, oct: +oct };
 };

@@ -10,7 +10,8 @@ export const getRandomKey = () => {
   return getRandomEl(keys);
 };
 
-export const getRandomNote = (lowestNote = 'E/2', highestNote = 'E/6') => {
+// staved note
+export const getRandomNote = (lowestNote = 'E/3', highestNote = 'E/7') => {
   const { oct: lowestOct } = getNoteInfo(lowestNote);
   const { oct: highestOct } = getNoteInfo(highestNote);
   const note = `${getRandomEl(NOTES)}/${getRandomNumber(1 + highestOct - lowestOct) + lowestOct}`;
@@ -46,7 +47,7 @@ const secondInversion = (baseNote, isMajor) => {
 
 export const getRandomTriad = () => {
   const isMajor = Math.random() > 0.5;
-  const baseNote = getRandomNote('D/3', 'G/5');
+  const baseNote = getRandomNote('D/4', 'G/6');
 
   const fn = getRandomEl([root, firstInversion, secondInversion]);
   const triad = fn(baseNote, isMajor);
