@@ -31,16 +31,17 @@ const addModifier =
     if (accidental) staveNote.addModifier(new Accidental(accidental), index);
   };
 
-export const getStaveNote = (pitch, keySignature = 'C') => {
+export const getStaveNote = (pitch, keySignature = 'C', color = 'black') => {
   const staveNote = new StaveNote({ keys: [pitch], duration: 4, auto_stem: true });
+  staveNote.setStyle({ fillStyle: color, strokeStyle: color });
   addModifier(staveNote, keySignature)(pitch);
 
   return staveNote;
 };
 
-export const getStaveChord = (keys, keySignature = 'C') => {
+export const getStaveChord = (keys, keySignature = 'C', color = 'black') => {
   const staveNote = new StaveNote({ keys, duration: 4, auto_stem: true });
-
+  staveNote.setStyle({ fillStyle: color, strokeStyle: color });
   keys.forEach(addModifier(staveNote, keySignature));
 
   return staveNote;

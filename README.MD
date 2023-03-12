@@ -27,4 +27,3 @@ A standard guitar's range is E/2 pitch (E/3 staved) to E/6 (E/7 staved)
 - link MIDI/audio to game
 - Selecting game / difficulty / fret area
 - Link to a Backend
-- Show wrong note played in red in stave

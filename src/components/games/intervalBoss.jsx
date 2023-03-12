@@ -11,14 +11,14 @@ export default function IntervalBoss({ keySignature, note, interval, isAbove, an
   const intervalNote = getNoteAboveBelow(isAbove, note, interval);
   const intervalStaveNote = answer && getStaveNote(intervalNote);
   const notes = [baseStaveNote, intervalStaveNote].filter(Boolean);
-
   const isCorrect = answer?.[0] === note && answer?.[1] === intervalNote;
+  const answerNotes = !isCorrect && answer?.map((note) => getStaveNote(note, keySignature, 'red'));
 
   return (
     <div>
       <h2>Interval Boss</h2>
       <p>Play the note and the note intervalled {dir}</p>
-      {note && <SingleStave keySignature={keySignature} notes={notes} />}
+      {note && <SingleStave keySignature={keySignature} notes={notes} secondVoice={answerNotes} />}
       {interval} {dir}
       {answer && (
         <>

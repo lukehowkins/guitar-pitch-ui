@@ -7,12 +7,13 @@ import SingleStave from '../singleStave';
 export default function NotationStation({ keySignature, note, answer, onDone }) {
   const staveNote = getStaveNote(note, keySignature);
   const isCorrect = answer === note;
+  const staveAnswer = answer && !isCorrect && [getStaveNote(answer, keySignature, 'red')];
 
   return (
     <div>
       <h2>Notation Station</h2>
       <p>Play this note on any string</p>
-      <SingleStave keySignature={keySignature} notes={[staveNote]} />
+      <SingleStave keySignature={keySignature} notes={[staveNote]} secondVoice={staveAnswer} />
       {answer && (
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>

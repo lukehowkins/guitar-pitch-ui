@@ -8,12 +8,13 @@ import SingleStave from '../singleStave';
 export default function TriadMaster({ keySignature, triad, answer, onDone }) {
   const chord = getStaveChord(triad, keySignature);
   const isCorrect = areChordsSame(triad, answer);
+  const notes = [chord, answer && !isCorrect && getStaveChord(answer, keySignature, 'red')].filter(Boolean);
 
   return (
     <div>
       <h2>Triad Master</h2>
       <p>Play this triad on any 3 adjacent strings</p>
-      <SingleStave keySignature={keySignature} notes={[chord]} />
+      <SingleStave keySignature={keySignature} notes={notes} />
       {answer && (
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>

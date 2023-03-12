@@ -9,12 +9,13 @@ export default function DoubleTrouble({ keySignature, note, interval, answer, on
   const notes = [note, getNoteAbove(note, interval)];
   const staveChord = getStaveChord(notes, keySignature);
   const isCorrect = areChordsSame(notes, answer);
+  const staveNotes = [staveChord, answer && !isCorrect && getStaveChord(answer, keySignature, 'red')].filter(Boolean);
 
   return (
     <div>
       <h2>Double Trouble</h2>
       <p>Play this double stop on any 2 adjacent strings</p>
-      <SingleStave keySignature={keySignature} notes={[staveChord]} />
+      <SingleStave keySignature={keySignature} notes={staveNotes} />
       {answer && (
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
