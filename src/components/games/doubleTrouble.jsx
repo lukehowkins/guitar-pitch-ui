@@ -5,7 +5,7 @@ import { getStaveChord } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
 import SingleStave from '../singleStave';
 
-export default function DoubleTrouble({ keySignature, note, interval, answer, onDone }) {
+export default function DoubleTrouble({ keySignature, note, interval, lowestFret, highestFret, answer, onDone }) {
   const notes = [note, getNoteAbove(note, interval)];
   const staveChord = getStaveChord(notes, keySignature);
   const isCorrect = areChordsSame(notes, answer);
@@ -20,7 +20,7 @@ export default function DoubleTrouble({ keySignature, note, interval, answer, on
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{notes.join(' ')}</p>
-          <GuitarFretboard notes={getFretboardPositions(notes)} />
+          <GuitarFretboard notes={getFretboardPositions(notes, lowestFret, highestFret)} />
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

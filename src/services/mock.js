@@ -1,12 +1,14 @@
 import { NOTES, KEYS, INTERVALS } from '../constants/theory';
-import { getNoteAbove, getNoteBelow, getNoteInfo, getStepDiff } from './notes';
+import { getNoteAbove, getNoteBelow, getNoteInfo, getSortedChord, getStepDiff } from './notes';
 
 const getRandomNumber = (n) => Math.floor(Math.random() * n);
 
 const getRandomEl = (arr) => arr[getRandomNumber(arr.length)];
 
-export const getRandomKey = () => {
-  const keys = Object.keys(KEYS);
+export const getRandomKey = (highestNumberOfAccidentals = 7) => {
+  const keys = Object.entries(KEYS)
+    .filter(([key, value]) => value.length <= highestNumberOfAccidentals)
+    .map(([key]) => key);
   return getRandomEl(keys);
 };
 
@@ -22,8 +24,10 @@ export const getRandomNote = (lowestNote = 'E/3', highestNote = 'E/7') => {
   return note;
 };
 
-export const getRandomInterval = (min = 0, max = undefined) => {
-  const intervals = Object.keys(INTERVALS).slice(min, max);
+export const getRandomInterval = (min = 'P1', max = undefined) => {
+  const minVal = INTERVALS[min];
+  const maxVal = INTERVALS[max];
+  const intervals = Object.keys(INTERVALS).slice(minVal, maxVal);
   return getRandomEl(intervals);
 };
 
@@ -45,15 +49,17 @@ const secondInversion = (baseNote, isMajor) => {
   return [fifth, baseNote, third];
 };
 
-export const getRandomTriad = () => {
+export const getRandomTriad = (lowestNote = 'E/3', highestNote = 'E/6') => {
   const isMajor = Math.random() > 0.5;
-  const baseNote = getRandomNote('D/4', 'G/6');
+  const baseNote = getRandomNote(getNoteAbove(lowestNote, 'M6'), 'G/6');
 
   const fn = getRandomEl([root, firstInversion, secondInversion]);
   const triad = fn(baseNote, isMajor);
+  const orderedTriad = getSortedChord(triad);
 
   try {
-    triad.map(getNoteInfo);
+    if (getStepDiff(lowestNote, orderedTriad[0]) < 0) return getRandomTriad();
+    if (getStepDiff(highestNote, orderedTriad[2]) > 0) return getRandomTriad();
   } catch {
     return getRandomTriad();
   }

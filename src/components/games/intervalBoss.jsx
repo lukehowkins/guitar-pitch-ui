@@ -5,7 +5,16 @@ import { getStaveNote } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
 import SingleStave from '../singleStave';
 
-export default function IntervalBoss({ keySignature, note, interval, isAbove, answer, onDone }) {
+export default function IntervalBoss({
+  keySignature,
+  note,
+  interval,
+  isAbove,
+  lowestFret,
+  highestFret,
+  answer,
+  onDone,
+}) {
   const dir = isAbove ? 'above' : 'below';
   const baseStaveNote = getStaveNote(note, keySignature);
   const intervalNote = getNoteAboveBelow(isAbove, note, interval);
@@ -26,7 +35,7 @@ export default function IntervalBoss({ keySignature, note, interval, isAbove, an
           <p>
             {intervalNote} is {interval} {dir} {note}
           </p>
-          <GuitarFretboard notes={getFretboardPositions([note, intervalNote])} />
+          <GuitarFretboard notes={getFretboardPositions([note, intervalNote], lowestFret, highestFret)} />
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

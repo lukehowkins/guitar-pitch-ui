@@ -34,8 +34,6 @@ export const getNoteInfo = (key) => {
   if (note[0] > 'G' || note.length > 2 || (note[1] && note[1] !== '#' && note[1] !== 'b')) {
     throw new Error('Invalid note');
   }
-  if (oct == 7 && getNoteIndex({ note }) > NOTES.findIndex((note) => note === 'E')) throw new Error('Note too high');
-  if (oct == 2 && getNoteIndex({ note }) < NOTES.findIndex((note) => note === 'E')) throw new Error('Note too low');
   return { note: note, oct: +oct };
 };
 
@@ -50,6 +48,8 @@ export const getStepDiff = (baseNote, note) => {
 };
 
 export const areNotesSame = (note1, note2) => {
+  if (!note1 && !note2) return true;
+
   const note1Info = getNoteInfo(note1);
   const note2Info = getNoteInfo(note2);
 
@@ -60,6 +60,8 @@ export const areNotesSame = (note1, note2) => {
 };
 
 export const areChordsSame = (chord1, chord2) => {
+  if (!chord1 && !chord2) return true;
+
   return (
     chord1?.length === chord2?.length &&
     chord1.every((note1) => chord2.some((note2) => areNotesSame(note1, note2))) &&
@@ -67,7 +69,33 @@ export const areChordsSame = (chord1, chord2) => {
   );
 };
 
-export const shiftOct = (note, shift) => {
+const makeNote = ({ note, oct }) => `${note}/${oct}`;
+
+export const getSortedChord = (chord) => {
+  return chord
+    .map(getNoteInfo)
+    .sort((a, b) => {
+      const isOctDiff = a.oct - b.oct;
+      if (isOctDiff) return isOctDiff;
+      const noteAIndex = getNoteIndex(a);
+      const noteBIndex = getNoteIndex(b);
+      return noteAIndex - noteBIndex;
+    })
+    .map(makeNote);
+};
+
+export const shiftOct = (note, octShift) => {
   const noteInfo = getNoteInfo(note);
-  return `${noteInfo.note}/${noteInfo.oct + shift}`;
+  return `${noteInfo.note}/${noteInfo.oct + octShift}`;
+};
+
+export const shiftNote = (note, stepShift) => {
+  const noteInfo = getNoteInfo(note);
+  const noteIndex = getNoteIndex(noteInfo);
+  const newNoteIndex = noteIndex + stepShift;
+  const octShift = Math.floor(newNoteIndex / 12);
+  let noteShift = newNoteIndex % 12;
+  if (noteShift < 0) noteShift += 12;
+  const newNote = NOTES[noteShift];
+  return `${newNote}/${noteInfo.oct + octShift}`;
 };

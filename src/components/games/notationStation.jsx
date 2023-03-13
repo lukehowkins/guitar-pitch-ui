@@ -4,7 +4,7 @@ import { getStaveNote } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
 import SingleStave from '../singleStave';
 
-export default function NotationStation({ keySignature, note, answer, onDone }) {
+export default function NotationStation({ keySignature, note, lowestFret, highestFret, answer, onDone }) {
   const staveNote = getStaveNote(note, keySignature);
   const isCorrect = answer === note;
   const staveAnswer = answer && !isCorrect && [getStaveNote(answer, keySignature, 'red')];
@@ -18,7 +18,7 @@ export default function NotationStation({ keySignature, note, answer, onDone }) 
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{note}</p>
-          <GuitarFretboard notes={[getFretboardPosition(note)]} />
+          <GuitarFretboard notes={[getFretboardPosition(note, lowestFret, highestFret)]} />
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

@@ -1,16 +1,18 @@
-import { getStepDiff, shiftOct } from './notes';
+import { getStepDiff, shiftNote, shiftOct } from './notes';
+
+const STANDARD_TUNING = ['E/4', 'B/3', 'G/3', 'D/3', 'A/2', 'E/2'];
 
 // Standard tuning only
 // takes a display note and transposes to pitch
 export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => {
   const transposedNote = shiftOct(note, -1); // to pitch
-  const string6Fret = getStepDiff('E/2', transposedNote);
+  const string6Fret = getStepDiff(STANDARD_TUNING[5], transposedNote);
   if (string6Fret < lowestFret) throw new Error('Note too low');
-  const string5Fret = getStepDiff('A/2', transposedNote);
-  const string4Fret = getStepDiff('D/3', transposedNote);
-  const string3Fret = getStepDiff('G/3', transposedNote);
-  const string2Fret = getStepDiff('B/3', transposedNote);
-  const string1Fret = getStepDiff('E/4', transposedNote);
+  const string5Fret = getStepDiff(STANDARD_TUNING[4], transposedNote);
+  const string4Fret = getStepDiff(STANDARD_TUNING[3], transposedNote);
+  const string3Fret = getStepDiff(STANDARD_TUNING[2], transposedNote);
+  const string2Fret = getStepDiff(STANDARD_TUNING[1], transposedNote);
+  const string1Fret = getStepDiff(STANDARD_TUNING[0], transposedNote);
   if (string1Fret > highestFret) throw new Error('Note too high');
 
   if (lowestFret <= string1Fret && string1Fret <= highestFret) return { string: 1, fret: string1Fret };
@@ -47,4 +49,23 @@ export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) =
   }
 
   return positions.sort((a, b) => b.string - a.string);
+};
+
+export const getFret = (note, string) => {
+  const openNote = STANDARD_TUNING[string - 1];
+  const fret = getStepDiff(openNote, note);
+  if (fret < 0 || fret > 24) throw new Error('Note can not be placed on string');
+  return fret;
+};
+
+export const getNote = (fret, string) => {
+  if (fret < 0 || fret > 24 || string < 1 || string > 6) throw new Error('Can not get note');
+  const openNote = STANDARD_TUNING[string - 1];
+  return shiftNote(openNote, fret);
+};
+
+export const getNoteRange = (lowestFret = 0, highestFret = 24) => {
+  if (lowestFret > highestFret || lowestFret < 0 || highestFret > 24) throw new Error('Invalid fret');
+
+  return [getNote(lowestFret, 6), getNote(highestFret, 1)];
 };

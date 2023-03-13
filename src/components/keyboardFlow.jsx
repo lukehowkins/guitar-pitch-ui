@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Game from './game';
 
 const convertToNotes = (s) => {
@@ -12,16 +12,19 @@ export const KeyboardFlow = () => {
   const [notes, setNotes] = useState('');
   const [answer, setAnswer] = useState();
 
-  const clear = () => {
+  const clear = useCallback(() => {
     setAnswer();
     setNotes('');
-    input.current.focus();
-  };
+    input.current?.focus();
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setAnswer(convertToNotes(notes));
-  };
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      setAnswer(convertToNotes(notes));
+    },
+    [notes]
+  );
 
   return (
     <>
