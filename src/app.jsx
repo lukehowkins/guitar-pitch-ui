@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import AudioSelect from './components/audioSelect/audioSelect';
-import AudioVisualiser from './components/audioVisualiser';
-import Game from './components/game';
+import React from 'react';
+// import AudioVisualiser from './components/audioVisualiser';
 import { GuitarFretboard } from './components/guitarFredboard';
 import { KeyboardFlow } from './components/keyboardFlow';
 import SingleStave from './components/singleStave';
@@ -11,26 +9,15 @@ import { getStaveChord, getStaveNote } from './services/staveNotes';
 const MOCK_FLOW = true;
 
 export default function App() {
-  const [{ type, preferredDeviceId }, setData] = useState({});
-
-  if (MOCK_FLOW) return <KeyboardFlow />;
-
   return (
     <div>
       <h1>Guitar training</h1>
-      {type ? (
-        <>
-          <Game />
-        </>
-      ) : (
-        <AudioSelect onSelect={setData} />
-      )}
+      {MOCK_FLOW && <KeyboardFlow />}
       <>
         <br />
         <h4>Testing area</h4>
         <p>Sound not linked to game yet!</p>
-        <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} />
-        <p>Static Fretboard not linked</p>
+        {/* <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} /> */}
         <SingleStave
           notes={[getStaveNote('C/4'), getStaveChord(['D/4', 'G/4', 'Bb/4']), getStaveChord(['E/5', 'Ab/5'])]}
           secondVoice={[

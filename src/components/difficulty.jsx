@@ -2,14 +2,26 @@ import './difficulty.css';
 import React, { useState } from 'react';
 import { getNoteRange } from '../services/guitar';
 import { shiftOct } from '../services/notes';
+import { GAME_LABELS } from '../constants/games';
 
 export default function Difficulty({ onSubmit }) {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    games: Object.keys(GAME_LABELS),
+  });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: +e.target.value,
+    });
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    const games = checked ? [...formData.games, name] : formData.games.filter((value) => value !== name);
+    setFormData({
+      ...formData,
+      games,
     });
   };
 
@@ -51,6 +63,14 @@ export default function Difficulty({ onSubmit }) {
         onChange={handleChange}
         placeholder="Highest fret"
       />
+
+      <label>Games:</label>
+      {Object.entries(GAME_LABELS).map(([name, label]) => (
+        <label key={name}>
+          <input type="checkbox" name={name} onChange={handleCheckboxChange} checked={formData.games.includes(name)} />
+          {label}
+        </label>
+      ))}
       <button>submit</button>
     </form>
   );

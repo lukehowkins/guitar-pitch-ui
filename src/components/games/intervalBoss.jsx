@@ -25,7 +25,6 @@ export default function IntervalBoss({
 
   return (
     <div>
-      <h2>Interval Boss</h2>
       <p>Play the note and the note intervalled {dir}</p>
       {note && <SingleStave keySignature={keySignature} notes={notes} secondVoice={answerNotes} />}
       {interval} {dir}

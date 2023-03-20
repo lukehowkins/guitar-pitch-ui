@@ -1,73 +1,16 @@
-import React, { memo, useMemo, useState } from 'react';
-import { INTERVALS } from '../constants/theory';
-import { getRandomInterval, getRandomKey, getRandomNote, getRandomTriad } from '../services/mock';
-import { areChordsSame, getNoteAbove, getNoteBelow } from '../services/notes';
+import React, { memo, useEffect, useState } from 'react';
+import { GAME_LABELS } from '../constants/games';
+import { areChordsSame } from '../services/notes';
+import { getNextGame } from '../services/test';
 import Difficulty from './difficulty';
-import { DoubleTrouble, IntervalBoss, NotationStation, TriadMaster } from './games';
-
-const GAMES = [
-  {
-    Component: NotationStation,
-    setup: (difficulty) => {
-      if (!difficulty) return {};
-      return {
-        keySignature: getRandomKey(difficulty.difficulty),
-        note: getRandomNote(difficulty.lowestStaveNote, difficulty.highestStaveNote),
-      };
-    },
-  },
-  {
-    Component: DoubleTrouble,
-    setup: (difficulty) => {
-      if (!difficulty) return {};
-      const minInterval = difficulty > 6 ? 'm2' : 'm3';
-      const maxInterval = difficulty > 5 ? 'M6' : 'P5';
-      return {
-        keySignature: getRandomKey(difficulty.difficulty),
-        note: getRandomNote(
-          getNoteAbove(difficulty.lowestStaveNote, maxInterval),
-          getNoteBelow(difficulty.highestStaveNote, maxInterval)
-        ),
-        interval: getRandomInterval(minInterval, maxInterval),
-        isAbove: Math.random() > 0.5,
-      };
-    },
-  },
-  {
-    Component: TriadMaster,
-    setup: (difficulty) => {
-      if (!difficulty) return {};
-      return {
-        keySignature: getRandomKey(difficulty.difficulty),
-        triad: getRandomTriad(difficulty.lowestStaveNote, difficulty.highestStaveNote),
-      };
-    },
-  },
-  {
-    Component: IntervalBoss,
-    setup: (difficulty) => {
-      if (!difficulty) return {};
-      const minInterval = 'm2';
-      const [maxInterval] = Object.entries(INTERVALS).find(([, val]) => val === 4 + difficulty.difficulty * 2);
-      return {
-        keySignature: getRandomKey(difficulty.difficulty),
-        note: getRandomNote(
-          getNoteAbove(difficulty.lowestStaveNote, minInterval),
-          getNoteBelow(difficulty.highestStaveNote, maxInterval)
-        ),
-        interval: getRandomInterval(minInterval, maxInterval),
-        isAbove: Math.random() > 0.5,
-      };
-    },
-  },
-];
+import GAMES from './games';
 
 function Game({ answer, onNext }) {
   const [turnCount, setTurnCount] = useState(0);
   const [score, setScore] = useState(0);
   const [difficultySetup, setDifficultySetup] = useState();
-  const { Component: CurrentGame, setup } = GAMES[turnCount % 4];
-  const gameSetup = useMemo(() => setup(difficultySetup), [turnCount, difficultySetup]);
+  const [{ game, ...gameSetup }, setGameSetup] = useState({});
+  const CurrentGame = GAMES[game];
 
   const handleNext = (isCorrect) => {
     setTurnCount(turnCount + 1);
@@ -75,7 +18,16 @@ function Game({ answer, onNext }) {
     onNext();
   };
 
+  useEffect(() => {
+    if (difficultySetup) {
+      const setup = getNextGame(difficultySetup, turnCount);
+      setGameSetup(setup);
+    }
+  }, [turnCount, difficultySetup]);
+
   if (!difficultySetup) return <Difficulty onSubmit={setDifficultySetup} />;
+
+  if (!CurrentGame) return <div>Please select a game</div>;
 
   return (
     <div>
@@ -86,6 +38,7 @@ function Game({ answer, onNext }) {
         <br />
         Play between frets {difficultySetup.lowestFret} and {difficultySetup.highestFret}
       </div>
+      <h2>{GAME_LABELS[game]}</h2>
       <CurrentGame {...gameSetup} {...difficultySetup} answer={answer} onDone={handleNext} />
     </div>
   );

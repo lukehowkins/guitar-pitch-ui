@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { getFretboardPosition } from '../../services/guitar';
 import { getStaveNote } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
@@ -11,7 +11,6 @@ export default function NotationStation({ keySignature, note, lowestFret, highes
 
   return (
     <div>
-      <h2>Notation Station</h2>
       <p>Play this note on any string</p>
       <SingleStave keySignature={keySignature} notes={[staveNote]} secondVoice={staveAnswer} />
       {answer && (

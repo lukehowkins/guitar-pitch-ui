@@ -25,5 +25,5 @@ A standard guitar's range is E/2 pitch (E/3 staved) to E/6 (E/7 staved)
 
 - vitest is only unit, [integrate with RTL](https://www.robinwieruch.de/vitest-react-testing-library/)
 - link MIDI/audio to game
-- Selecting game
 - Link to a Backend
+- Tab toggle

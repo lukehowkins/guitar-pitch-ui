@@ -12,7 +12,6 @@ export default function TriadMaster({ keySignature, triad, lowestFret, highestFr
 
   return (
     <div>
-      <h2>Triad Master</h2>
       <p>Play this triad on any 3 adjacent strings</p>
       <SingleStave keySignature={keySignature} notes={notes} />
       {answer && (

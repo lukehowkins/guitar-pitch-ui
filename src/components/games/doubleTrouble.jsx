@@ -13,7 +13,6 @@ export default function DoubleTrouble({ keySignature, note, interval, lowestFret
 
   return (
     <div>
-      <h2>Double Trouble</h2>
       <p>Play this double stop on any 2 adjacent strings</p>
       <SingleStave keySignature={keySignature} notes={staveNotes} />
       {answer && (
