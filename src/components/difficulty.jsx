@@ -7,12 +7,16 @@ import { GAME_LABELS } from '../constants/games';
 export default function Difficulty({ onSubmit }) {
   const [formData, setFormData] = useState({
     games: Object.keys(GAME_LABELS),
+    difficulty: 0,
+    lowestFret: 0,
+    highestFret: 24,
   });
 
   const handleChange = (e) => {
+    const { value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: +e.target.value,
+      [e.target.name]: value === '' ? '' : +value,
     });
   };
 
@@ -33,36 +37,27 @@ export default function Difficulty({ onSubmit }) {
     return false;
   };
 
-  // TODO choose games
   return (
     <form onSubmit={handleSubmit} className="difficulty">
-      <input
-        type="number"
-        min={0}
-        max={10}
-        name="difficulty"
-        value={formData.difficulty || ''}
-        onChange={handleChange}
-        placeholder="Difficulty"
-      />
-      <input
-        type="number"
-        min={0}
-        max={20}
-        name="lowestFret"
-        value={formData.lowestFret || ''}
-        onChange={handleChange}
-        placeholder="Lowest fret"
-      />
-      <input
-        type="number"
-        min={(formData.lowestFret || 0) + 4}
-        max={24}
-        name="highestFret"
-        value={formData.highestFret || ''}
-        onChange={handleChange}
-        placeholder="Highest fret"
-      />
+      <label>
+        Difficulty
+        <input type="number" min={0} max={10} name="difficulty" value={formData.difficulty} onChange={handleChange} />
+      </label>
+      <label>
+        Lowest fret
+        <input type="number" min={0} max={20} name="lowestFret" value={formData.lowestFret} onChange={handleChange} />
+      </label>
+      <label>
+        Highest fret
+        <input
+          type="number"
+          min={(formData.lowestFret || 0) + 4}
+          max={24}
+          name="highestFret"
+          value={formData.highestFret}
+          onChange={handleChange}
+        />
+      </label>
 
       <label>Games:</label>
       {Object.entries(GAME_LABELS).map(([name, label]) => (
