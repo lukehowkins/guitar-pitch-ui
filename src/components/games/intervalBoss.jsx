@@ -3,6 +3,7 @@ import { getFretboardPositions } from '../../services/guitar';
 import { getNoteAboveBelow } from '../../services/notes';
 import { getStaveNote } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
+import GuitarTab from '../guitarTab';
 import SingleStave from '../singleStave';
 
 export default function IntervalBoss({
@@ -16,17 +17,21 @@ export default function IntervalBoss({
   onDone,
 }) {
   const dir = isAbove ? 'above' : 'below';
-  const baseStaveNote = getStaveNote(note, keySignature);
   const intervalNote = getNoteAboveBelow(isAbove, note, interval);
-  const intervalStaveNote = answer && getStaveNote(intervalNote);
-  const notes = [baseStaveNote, intervalStaveNote].filter(Boolean);
   const isCorrect = answer?.[0] === note && answer?.[1] === intervalNote;
-  const answerNotes = !isCorrect && answer?.map((note) => getStaveNote(note, keySignature, 'red'));
+  const notes = [note, answer && intervalNote].filter(Boolean);
 
   return (
     <div>
       <p>Play the note and the note intervalled {dir}</p>
-      {note && <SingleStave keySignature={keySignature} notes={notes} secondVoice={answerNotes} />}
+      {note && (
+        <SingleStave
+          keySignature={keySignature}
+          notes={notes}
+          secondVoice={!isCorrect && answer}
+          secondVoiceColor="red"
+        />
+      )}
       {interval} {dir}
       {answer && (
         <>
@@ -34,7 +39,8 @@ export default function IntervalBoss({
           <p>
             {intervalNote} is {interval} {dir} {note}
           </p>
-          <GuitarFretboard notes={getFretboardPositions([note, intervalNote], lowestFret, highestFret)} />
+          <GuitarFretboard notes={getFretboardPositions(notes, lowestFret, highestFret)} />
+          <GuitarTab notes={notes} />
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

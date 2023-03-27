@@ -15,12 +15,12 @@ export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => 
   const string1Fret = getStepDiff(STANDARD_TUNING[0], transposedNote);
   if (string1Fret > highestFret) throw new Error('Note too high');
 
-  if (lowestFret <= string1Fret && string1Fret <= highestFret) return { string: 1, fret: string1Fret };
-  if (lowestFret <= string2Fret && string2Fret <= highestFret) return { string: 2, fret: string2Fret };
-  if (lowestFret <= string3Fret && string3Fret <= highestFret) return { string: 3, fret: string3Fret };
-  if (lowestFret <= string4Fret && string4Fret <= highestFret) return { string: 4, fret: string4Fret };
-  if (lowestFret <= string5Fret && string5Fret <= highestFret) return { string: 5, fret: string5Fret };
-  if (lowestFret <= string6Fret && string6Fret <= highestFret) return { string: 6, fret: string6Fret };
+  if (lowestFret <= string1Fret && string1Fret <= highestFret) return { str: 1, fret: string1Fret };
+  if (lowestFret <= string2Fret && string2Fret <= highestFret) return { str: 2, fret: string2Fret };
+  if (lowestFret <= string3Fret && string3Fret <= highestFret) return { str: 3, fret: string3Fret };
+  if (lowestFret <= string4Fret && string4Fret <= highestFret) return { str: 4, fret: string4Fret };
+  if (lowestFret <= string5Fret && string5Fret <= highestFret) return { str: 5, fret: string5Fret };
+  if (lowestFret <= string6Fret && string6Fret <= highestFret) return { str: 6, fret: string6Fret };
 
   throw new Error(`Could not place note on guitar fret between ${lowestFret} and ${highestFret}`);
 };
@@ -38,7 +38,7 @@ export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) =
     return position;
   });
 
-  const strings = positions.map(({ string }) => string);
+  const strings = positions.map(({ str }) => str);
   const distinctStrings = [...new Set(strings)];
   if (strings.length !== distinctStrings.length) {
     try {
@@ -48,7 +48,7 @@ export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) =
     }
   }
 
-  return positions.sort((a, b) => b.string - a.string);
+  return positions.sort((a, b) => b.str - a.str);
 };
 
 export const getFret = (note, string) => {

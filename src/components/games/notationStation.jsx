@@ -1,23 +1,27 @@
 import React from 'react';
 import { getFretboardPosition } from '../../services/guitar';
-import { getStaveNote } from '../../services/staveNotes';
 import { GuitarFretboard } from '../guitarFredboard';
 import SingleStave from '../singleStave';
+import GuitarTab from '../guitarTab';
 
 export default function NotationStation({ keySignature, note, lowestFret, highestFret, answer, onDone }) {
-  const staveNote = getStaveNote(note, keySignature);
   const isCorrect = answer === note;
-  const staveAnswer = answer && !isCorrect && [getStaveNote(answer, keySignature, 'red')];
 
   return (
     <div>
       <p>Play this note on any string</p>
-      <SingleStave keySignature={keySignature} notes={[staveNote]} secondVoice={staveAnswer} />
+      <SingleStave
+        keySignature={keySignature}
+        notes={[note]}
+        secondVoice={!isCorrect && answer && [answer]}
+        secondVoiceColor="red"
+      />
       {answer && (
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{note}</p>
           <GuitarFretboard notes={[getFretboardPosition(note, lowestFret, highestFret)]} />
+          <GuitarTab notes={[note]} />
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

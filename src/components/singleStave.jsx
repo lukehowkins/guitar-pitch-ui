@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { generateStaveWithNotes } from '../services/stave';
+import { generateStaveWithNotes, generateStaveWithStaveNotes } from '../services/stave';
 
-export default function SingleStave({ notes = [], keySignature = 'C', secondVoice }) {
+export default function SingleStave({ staveNotes, notes, keySignature = 'C', secondVoice, secondVoiceColor }) {
   const divRef = useRef();
 
   useEffect(() => {
-    generateStaveWithNotes(divRef.current, notes, keySignature, secondVoice);
-  }, [keySignature, notes]);
+    if (staveNotes) generateStaveWithStaveNotes(divRef.current, staveNotes, keySignature, secondVoice);
+    else if (notes) generateStaveWithNotes(divRef.current, notes, keySignature, secondVoice, secondVoiceColor);
+  }, [notes, keySignature, secondVoice, secondVoiceColor]);
 
   return <div ref={divRef} />;
 }

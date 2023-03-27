@@ -82,7 +82,7 @@ export const GuitarFretboard = ({ tuning = STANDARD, notes }) => {
     tuning.forEach((name, index) => {
       const string = index + 1;
       const x = getX(index);
-      const noteOnString = notes.find((note) => note.string === string);
+      const noteOnString = notes.find((note) => note.str === string);
       if (noteOnString) {
         if (noteOnString.fret === 0) {
           context.fillText('O', x - FONT_SIZE / 4, startStringY - 2);
