@@ -113,6 +113,7 @@ describe('notes', () => {
       expect(areChordsSame(['G/4', 'C/4'], ['C/4', 'G/4'])).toEqual(true);
       expect(areChordsSame(['D/3', 'F#/3', 'A/3'], ['D/3', 'Gb/3', 'A/3'])).toEqual(true);
       expect(areChordsSame(['Bb/5', 'Eb/3'], ['Eb/3', 'Bb/5'])).toEqual(true);
+      expect(areChordsSame('C#/4', 'C#/4')).toEqual(true);
     });
     it('should return false', () => {
       expect(areChordsSame(['G/4', 'C/4'], ['G/4'])).toEqual(false);
@@ -120,6 +121,7 @@ describe('notes', () => {
       expect(areChordsSame(['D/3', 'F#/3', 'A/3'], ['D/3', 'D/3', 'D/3'])).toEqual(false);
       expect(areChordsSame(['D/3', 'D/3', 'D/3'], ['D/3', 'F#/3', 'A/3'])).toEqual(false);
       expect(areChordsSame(['D/3', 'F#/3', 'A/3'], ['D/3', 'F#/4', 'A/3'])).toEqual(false);
+      expect(areChordsSame('C/4', 'C#/5')).toEqual(false);
     });
   });
 

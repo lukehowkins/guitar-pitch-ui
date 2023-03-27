@@ -61,6 +61,7 @@ export const areNotesSame = (note1, note2) => {
 
 export const areChordsSame = (chord1, chord2) => {
   if (!chord1 && !chord2) return true;
+  if (typeof chord1 === 'string' && typeof chord2 === 'string') return areNotesSame(chord1, chord2);
 
   return (
     chord1?.length === chord2?.length &&
