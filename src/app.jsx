@@ -2,6 +2,7 @@ import React from 'react';
 // import AudioVisualiser from './components/audioVisualiser';
 import { GuitarFretboard } from './components/guitarFredboard';
 import GuitarTab from './components/guitarTab';
+import { ImportXML } from './components/importXML';
 import { KeyboardFlow } from './components/keyboardFlow';
 import SingleStave from './components/singleStave';
 import { getFretboardPositions } from './services/guitar';
@@ -21,6 +22,7 @@ export default function App() {
           <h4>Testing area</h4>
           <p>Sound not linked to game yet!</p>
           {/* <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} /> */}
+          <ImportXML />
           <SingleStave
             staveNotes={[getStaveNote('C/4'), getStaveChord(['D/4', 'G/4', 'Bb/4']), getStaveChord(['E/5', 'Ab/5'])]}
             secondVoice={[
