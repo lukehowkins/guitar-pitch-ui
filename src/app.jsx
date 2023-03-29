@@ -9,7 +9,7 @@ import { getFretboardPositions } from './services/guitar';
 import { getStaveChord, getStaveNote } from './services/staveNotes';
 import { getTabChord, getTabNote } from './services/tabNote';
 
-const SHOW_TESTING_AREA = false;
+const SHOW_TESTING_AREA = window.location.search.includes('testing');
 
 export default function App() {
   return (
