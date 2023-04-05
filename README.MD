@@ -27,6 +27,7 @@ A standard guitar's range is E/2 pitch (E/3 staved) to E/6 (E/7 staved)
 - link MIDI/audio to game
 - Link to a Backend
 - Tab toggle
-- Make a user context (or redux?)
+- Use sass
+- add routes
 - Align default import to named export
 - Handle note to low / can't place note errors gracefully (I play a note below lowest fret)

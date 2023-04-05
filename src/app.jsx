@@ -2,6 +2,7 @@ import React from 'react';
 // import AudioVisualiser from './components/audioVisualiser';
 import { GuitarFretboard } from './components/guitarFredboard';
 import GuitarTab from './components/guitarTab';
+import Header from './components/header';
 import { ImportXML } from './components/importXML';
 import { KeyboardFlow } from './components/keyboardFlow';
 import SingleStave from './components/singleStave';
@@ -14,7 +15,7 @@ const SHOW_TESTING_AREA = window.location.search.includes('testing');
 export default function App() {
   return (
     <div>
-      <h1>Guitar training</h1>
+      <Header />
       <KeyboardFlow />
       {SHOW_TESTING_AREA && (
         <>

@@ -2,13 +2,14 @@ import React, { memo, useEffect, useState } from 'react';
 import { GAME_LABELS } from '../constants/games';
 import { areChordsSame } from '../services/notes';
 import { getNextGame } from '../services/test';
+import { useGameStore } from '../store/game';
 import Difficulty from './difficulty';
 import GAMES from './games';
 
 function Game({ answer, onNext }) {
+  const difficultySetup = useGameStore();
   const [turnCount, setTurnCount] = useState(0);
   const [score, setScore] = useState(0);
-  const [difficultySetup, setDifficultySetup] = useState();
   const [{ game, ...gameSetup }, setGameSetup] = useState({});
   const CurrentGame = GAMES[game];
 
@@ -19,13 +20,13 @@ function Game({ answer, onNext }) {
   };
 
   useEffect(() => {
-    if (difficultySetup) {
+    if (difficultySetup?.games?.length) {
       const setup = getNextGame(difficultySetup, turnCount);
       setGameSetup(setup);
     }
   }, [turnCount, difficultySetup]);
 
-  if (!difficultySetup) return <Difficulty onSubmit={setDifficultySetup} />;
+  if (!difficultySetup?.games?.length) return <Difficulty />;
 
   if (!CurrentGame) return <div>Please select a game</div>;
 

@@ -1,10 +1,12 @@
 import './difficulty.css';
 import React, { useState } from 'react';
-import { getNoteRange } from '../services/guitar';
-import { shiftOct } from '../services/notes';
 import { GAME_LABELS } from '../constants/games';
+import { useGameStore } from '../store/game';
 
-export default function Difficulty({ onSubmit }) {
+export default function Difficulty() {
+  const setGames = useGameStore((state) => state.setGames);
+  const setDifficulty = useGameStore((state) => state.setDifficulty);
+  const setRange = useGameStore((state) => state.setRange);
   const [formData, setFormData] = useState({
     games: Object.keys(GAME_LABELS),
     difficulty: 0,
@@ -29,12 +31,11 @@ export default function Difficulty({ onSubmit }) {
     });
   };
 
-  const handleSubmit = () => {
-    const [lowestNote, highestNote] = getNoteRange(formData.lowestFret, formData.highestFret);
-    const lowestStaveNote = shiftOct(lowestNote, 1);
-    const highestStaveNote = shiftOct(highestNote, 1);
-    onSubmit({ ...formData, lowestStaveNote, highestStaveNote });
-    return false;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setGames(formData.games);
+    setDifficulty(formData.difficulty);
+    setRange(formData.lowestFret, formData.highestFret);
   };
 
   return (
