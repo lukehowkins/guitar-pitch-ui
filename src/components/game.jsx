@@ -5,6 +5,7 @@ import { getNextGame } from '../services/test';
 import { useGameStore } from '../store/game';
 import Difficulty from './difficulty';
 import GAMES from './games';
+import Loading from './loading';
 
 function Game({ answer, onNext }) {
   const difficultySetup = useGameStore();
@@ -28,7 +29,7 @@ function Game({ answer, onNext }) {
 
   if (!difficultySetup?.games?.length) return <Difficulty />;
 
-  if (!CurrentGame) return <div>Please select a game</div>;
+  if (!CurrentGame) return <Loading />;
 
   return (
     <div>

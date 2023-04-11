@@ -28,6 +28,5 @@ A standard guitar's range is E/2 pitch (E/3 staved) to E/6 (E/7 staved)
 - Link to a Backend
 - Tab toggle
 - Use sass
-- add routes
 - Align default import to named export
-- Handle note to low / can't place note errors gracefully (I play a note below lowest fret)
+- Handle note to low / can't place note errors gracefully (I play a note below lowest/highest fret)

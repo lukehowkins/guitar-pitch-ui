@@ -2,6 +2,7 @@ import './audioSelect.css';
 import React, { useEffect, useState } from 'react';
 import { getAudioInputs } from '../../services/audioInput';
 import Error from '../error';
+import Loading from '../loading';
 
 export default function AudioInputSelect({ onSelect }) {
   const [inputs, setInputs] = useState();
@@ -10,7 +11,7 @@ export default function AudioInputSelect({ onSelect }) {
     getAudioInputs().then(setInputs, () => setInputs([]));
   }, []);
 
-  if (!inputs) return <p>Loading...</p>;
+  if (!inputs) return <Loading />;
 
   if (!inputs.length) {
     return <Error message="Could not find any audio inputs. Please make sure you give permission to use microphone" />;

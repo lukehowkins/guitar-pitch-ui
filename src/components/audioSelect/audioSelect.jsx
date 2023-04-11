@@ -4,6 +4,7 @@ import { MIC, MIDI } from '../../constants/inputTypes';
 import { hasMidiInputs } from '../../services/midi';
 import AudioInputSelect from './audioInputSelect';
 import Error from '../error';
+import Loading from '../loading';
 
 export default function AudioSelect({ onSelect }) {
   const [showMIDI, setShowMidi] = useState();
@@ -18,7 +19,7 @@ export default function AudioSelect({ onSelect }) {
   }, []);
 
   if (error) return <Error message={error.toString()} />;
-  if (showMIDI === undefined) return <div>Loading...</div>;
+  if (showMIDI === undefined) return <Loading />;
 
   return (
     <div>
