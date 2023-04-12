@@ -7,7 +7,7 @@ export default function SingleStave({ staveNotes, notes, keySignature = 'C', sec
   useEffect(() => {
     if (staveNotes) generateStaveWithStaveNotes(divRef.current, staveNotes, keySignature, secondVoice);
     else if (notes) generateStaveWithNotes(divRef.current, notes, keySignature, secondVoice, secondVoiceColor);
-  }, [notes, keySignature, secondVoice, secondVoiceColor]);
+  }, [staveNotes, notes, keySignature, secondVoice, secondVoiceColor]);
 
   return <div ref={divRef} />;
 }

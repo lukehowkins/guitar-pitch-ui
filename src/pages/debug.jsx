@@ -26,6 +26,10 @@ export default function Debug() {
         keySignature="D"
         secondVoiceColor="red"
       />
+      <SingleStave
+        keySignature="Fm"
+        staveNotes={[getStaveChord(['Db/4', 'G/4', 'Bb/4'], 'Fm'), getStaveChord(['Eb/5', 'Ab/5'], 'Fm', 'orange')]}
+      />
       <GuitarTab notes={['C/4', ['D/4', 'G/4', 'Bb/4'], ['F/5', 'Ab/5']]} />
       <GuitarTab tabNotes={[getTabNote('C/5'), getTabChord(['D/5', 'G/5', 'Bb/5']), getTabChord(['F/6', 'Ab/6'])]} />
       <GuitarTab

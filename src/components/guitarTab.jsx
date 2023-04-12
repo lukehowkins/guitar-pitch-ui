@@ -8,7 +8,7 @@ export default function GuitarTab({ tabNotes, notes, positions, lowestFret, high
     if (positions) generateTabWithPositions(divRef.current, positions);
     else if (tabNotes) generateTabWithTabNotes(divRef.current, tabNotes);
     else if (notes) generateTabWithNotes(divRef.current, notes, lowestFret, highestFret);
-  }, [tabNotes, notes]);
+  }, [tabNotes, notes, positions, lowestFret, highestFret]);
 
   return <div ref={divRef} />;
 }
