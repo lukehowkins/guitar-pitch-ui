@@ -22,7 +22,7 @@ export default function TriadMaster({ keySignature, triad, lowestFret, highestFr
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{triad.join(' ')}</p>
           {showGuitarFretboard && <GuitarFretboard notes={getFretboardPositions(triad, lowestFret, highestFret)} />}
-          {showTab && <GuitarTab notes={[triad]} />}
+          {showTab && <GuitarTab notes={[triad]} lowestFret={lowestFret} highestFret={highestFret} />}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

@@ -27,7 +27,7 @@ export default function DoubleTrouble({ keySignature, note, interval, lowestFret
           {showGuitarFretboard && (
             <GuitarFretboard notes={getFretboardPositions(doubleStop, lowestFret, highestFret)} />
           )}
-          {showTab && <GuitarTab notes={[doubleStop]} />}
+          {showTab && <GuitarTab notes={[doubleStop]} lowestFret={lowestFret} highestFret={highestFret} />}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

@@ -41,7 +41,7 @@ export default function IntervalBoss({
             {intervalNote} is {interval} {dir} {note}
           </p>
           {showGuitarFretboard && <GuitarFretboard notes={getFretboardPositions(notes, lowestFret, highestFret)} />}
-          {showTab && <GuitarTab notes={notes} />}
+          {showTab && <GuitarTab notes={notes} lowestFret={lowestFret} highestFret={highestFret} />}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

@@ -38,10 +38,10 @@ export const generateTabWithPositions = (ref, positions) => {
   return generateTabWithTabNotes(ref, tabNotes);
 };
 
-export const generateTabWithNotes = (ref, notes) => {
+export const generateTabWithNotes = (ref, notes, lowestFret, highestFret) => {
   const tabNotes = notes.map((note) => {
-    if (typeof note === 'string') return getTabNote(note);
-    return getTabChord(note);
+    if (typeof note === 'string') return getTabNote(note, lowestFret, highestFret);
+    return getTabChord(note, lowestFret, highestFret);
   });
 
   return generateTabWithTabNotes(ref, tabNotes);

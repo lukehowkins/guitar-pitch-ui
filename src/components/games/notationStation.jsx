@@ -23,7 +23,7 @@ export default function NotationStation({ keySignature, note, lowestFret, highes
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{note}</p>
           {showGuitarFretboard && <GuitarFretboard notes={[getFretboardPosition(note, lowestFret, highestFret)]} />}
-          {showTab && <GuitarTab notes={[note]} />}
+          {showTab && <GuitarTab notes={[note]} lowestFret={lowestFret} highestFret={highestFret} />}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>
