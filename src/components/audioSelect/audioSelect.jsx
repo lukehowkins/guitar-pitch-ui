@@ -1,4 +1,4 @@
-import './audioSelect.css';
+import './audioSelect.scss';
 import React, { useEffect, useState } from 'react';
 import { MIC, MIDI } from '../../constants/inputTypes';
 import { hasMidiInputs } from '../../services/midi';

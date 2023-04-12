@@ -1,4 +1,4 @@
-import './header.css';
+import './header.scss';
 import React from 'react';
 import { login } from '../services/user';
 import { useUserStore } from '../store/user';

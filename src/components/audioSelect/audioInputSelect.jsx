@@ -1,4 +1,4 @@
-import './audioSelect.css';
+import './audioSelect.scss';
 import React, { useEffect, useState } from 'react';
 import { getAudioInputs } from '../../services/audioInput';
 import Error from '../error';

@@ -1,4 +1,4 @@
-import './difficulty.css';
+import './difficulty.scss';
 import React, { useState } from 'react';
 import { GAME_LABELS } from '../constants/games';
 import { useGameStore } from '../store/game';
