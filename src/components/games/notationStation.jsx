@@ -1,10 +1,12 @@
 import React from 'react';
 import { getFretboardPosition } from '../../services/guitar';
+import { useUserStore } from '../../store/user';
 import GuitarFretboard from '../guitarFredboard';
 import SingleStave from '../singleStave';
 import GuitarTab from '../guitarTab';
 
 export default function NotationStation({ keySignature, note, lowestFret, highestFret, answer, onDone }) {
+  const { showGuitarFretboard, showTab } = useUserStore();
   const isCorrect = answer === note;
 
   return (
@@ -20,8 +22,8 @@ export default function NotationStation({ keySignature, note, lowestFret, highes
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{note}</p>
-          <GuitarFretboard notes={[getFretboardPosition(note, lowestFret, highestFret)]} />
-          <GuitarTab notes={[note]} />
+          {showGuitarFretboard && <GuitarFretboard notes={[getFretboardPosition(note, lowestFret, highestFret)]} />}
+          {showTab && <GuitarTab notes={[note]} />}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

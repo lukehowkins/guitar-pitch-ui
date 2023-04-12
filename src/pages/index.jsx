@@ -3,9 +3,11 @@ import Error from '../components/error';
 import Layout from './layout';
 import Home from './home';
 import Debug from './debug';
+import User from './user';
 
 export const HOME_PATH = '';
 export const DEBUG_PATH = 'debug';
+export const USER_PATH = 'user';
 
 export default createBrowserRouter(
   [
@@ -17,6 +19,10 @@ export default createBrowserRouter(
         {
           index: true,
           element: <Home />,
+        },
+        {
+          path: USER_PATH,
+          element: <User />,
         },
         {
           path: DEBUG_PATH,

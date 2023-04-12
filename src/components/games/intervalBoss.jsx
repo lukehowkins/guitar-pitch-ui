@@ -1,6 +1,7 @@
 import React from 'react';
 import { getFretboardPositions } from '../../services/guitar';
 import { getNoteAboveBelow } from '../../services/notes';
+import { useUserStore } from '../../store/user';
 import GuitarFretboard from '../guitarFredboard';
 import GuitarTab from '../guitarTab';
 import SingleStave from '../singleStave';
@@ -15,6 +16,7 @@ export default function IntervalBoss({
   answer,
   onDone,
 }) {
+  const { showGuitarFretboard, showTab } = useUserStore();
   const dir = isAbove ? 'above' : 'below';
   const intervalNote = getNoteAboveBelow(isAbove, note, interval);
   const isCorrect = answer?.[0] === note && answer?.[1] === intervalNote;
@@ -38,8 +40,8 @@ export default function IntervalBoss({
           <p>
             {intervalNote} is {interval} {dir} {note}
           </p>
-          <GuitarFretboard notes={getFretboardPositions(notes, lowestFret, highestFret)} />
-          <GuitarTab notes={notes} />
+          {showGuitarFretboard && <GuitarFretboard notes={getFretboardPositions(notes, lowestFret, highestFret)} />}
+          {showTab && <GuitarTab notes={notes} />}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>
