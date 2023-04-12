@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { loadFile } from '../services/musicXMLImport';
 
-export const ImportXML = () => {
+export default function ImportXML() {
   const ref = useRef();
 
   const handleFile = async (event) => {
@@ -17,4 +17,4 @@ export const ImportXML = () => {
       <div ref={ref} />
     </>
   );
-};
+}

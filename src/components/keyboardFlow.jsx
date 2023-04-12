@@ -7,7 +7,7 @@ const convertToNotes = (s) => {
   return s;
 };
 
-export const KeyboardFlow = () => {
+export default function KeyboardFlow() {
   const input = useRef();
   const [notes, setNotes] = useState('');
   const [answer, setAnswer] = useState();
@@ -35,4 +35,4 @@ export const KeyboardFlow = () => {
       </form>
     </>
   );
-};
+}

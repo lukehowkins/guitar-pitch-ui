@@ -1,6 +1,6 @@
 import React from 'react';
 import { getFretboardPosition } from '../../services/guitar';
-import { GuitarFretboard } from '../guitarFredboard';
+import GuitarFretboard from '../guitarFredboard';
 import SingleStave from '../singleStave';
 import GuitarTab from '../guitarTab';
 

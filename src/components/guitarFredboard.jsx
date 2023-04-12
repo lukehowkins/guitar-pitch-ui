@@ -21,7 +21,7 @@ const getFretRange = (notes) => {
   return { startFret, numberOfFrets };
 };
 
-export const GuitarFretboard = ({ tuning = STANDARD, notes }) => {
+export default function GuitarFretboard({ tuning = STANDARD, notes }) {
   const canvasRef = useRef();
   const { startFret, numberOfFrets } = getFretRange(notes);
 
@@ -100,4 +100,4 @@ export const GuitarFretboard = ({ tuning = STANDARD, notes }) => {
   }, [tuning, notes]);
 
   return <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} />;
-};
+}
