@@ -68,11 +68,11 @@ describe('notes', () => {
 
   describe('getNoteInfo', () => {
     it('should throw error', () => {
-      expect(() => getNoteInfo()).toThrowError(new Error('Note missing'));
-      expect(() => getNoteInfo('')).toThrowError(new Error('Note missing'));
-      expect(() => getNoteInfo('C')).toThrowError(new Error('Octave missing'));
-      expect(() => getNoteInfo('C/1')).toThrowError(new Error('Octave too low'));
-      expect(() => getNoteInfo('C/10')).toThrowError(new Error('Octave too high'));
+      expect(() => getNoteInfo()).toThrowError(new Error('Invalid note'));
+      expect(() => getNoteInfo('')).toThrowError(new Error('Invalid note'));
+      expect(() => getNoteInfo('C')).toThrowError(new Error('Invalid note'));
+      expect(() => getNoteInfo('C/0')).toThrowError(new Error('Note too low'));
+      expect(() => getNoteInfo('C/10')).toThrowError(new Error('Note too high'));
       expect(() => getNoteInfo('L/3')).toThrowError(new Error('Invalid note'));
       expect(() => getNoteInfo('ABC/3')).toThrowError(new Error('Invalid note'));
       expect(() => getNoteInfo('bb/4')).toThrowError(new Error('Invalid note'));
@@ -100,9 +100,9 @@ describe('notes', () => {
     });
 
     it('should throw error', () => {
-      expect(() => areNotesSame('C/4')).toThrowError(new Error('Note missing'));
-      expect(() => areNotesSame(null, 'C/4')).toThrowError(new Error('Note missing'));
-      expect(() => areNotesSame('C/4', 'E/1')).toThrowError(new Error('Octave too low'));
+      expect(() => areNotesSame('C/4')).toThrowError(new Error('Invalid note'));
+      expect(() => areNotesSame(null, 'C/4')).toThrowError(new Error('Invalid note'));
+      expect(() => areNotesSame('C/4', 'E/0')).toThrowError(new Error('Note too low'));
     });
   });
 

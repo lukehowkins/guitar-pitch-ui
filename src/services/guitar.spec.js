@@ -53,7 +53,7 @@ describe('guitar', () => {
       expect(getFretboardPosition('A/4', 11, 13)).toEqual({ str: 5, fret: 12 });
       expect(getFretboardPosition('D/5', 11, 13)).toEqual({ str: 4, fret: 12 });
       expect(() => getFretboardPosition('E/5', 11, 13)).toThrowError(
-        new Error('Could not place note E/5 on guitar fret between 11 and 13')
+        new Error('Could not place note on guitar fretboard')
       );
       expect(getFretboardPosition('C/6', 11, 13)).toEqual({ str: 2, fret: 13 });
       expect(getFretboardPosition('E/6', 11, 13)).toEqual({ str: 1, fret: 12 });
@@ -65,7 +65,7 @@ describe('guitar', () => {
   describe('getFretboardPositions()', () => {
     it('get frets across whole guitar fretboard', () => {
       expect(() => getFretboardPositions(['E/3', 'F/3'])).toThrowError(
-        new Error('Could not position on guitar fretboard')
+        new Error('Could not place note on guitar fretboard')
       );
       expect(getFretboardPositions(['E/3', 'E/4'])).toEqual([
         { str: 6, fret: 0 },
@@ -100,11 +100,11 @@ describe('guitar', () => {
 
     it('get frets between 5 and 12', () => {
       expect(() => getFretboardPositions(['E/3', 'F/3'])).toThrowError(
-        new Error('Could not position on guitar fretboard')
+        new Error('Could not place note on guitar fretboard')
       );
       expect(() => getFretboardPositions(['E/3', 'E/4'], 5, 12)).toThrowError(new Error('Note too low'));
       expect(() => getFretboardPositions(['A/3', 'C#/4', 'E/4'], 5, 12)).toThrowError(
-        new Error('Could not position on guitar fretboard')
+        new Error('Could not place note on guitar fretboard')
       );
       expect(getFretboardPositions(['F#/4', 'A#/4', 'D/5', 'F/5'], 5, 12)).toEqual([
         { str: 5, fret: 9 },
@@ -141,10 +141,10 @@ describe('guitar', () => {
     });
 
     it('should throw', () => {
-      expect(() => getFret('Eb/2', 6)).toThrowError(new Error('Note can not be placed on string'));
-      expect(() => getFret('G#/5', 5)).toThrowError(new Error('Note can not be placed on string'));
-      expect(() => getFret('F/2', 2)).toThrowError(new Error('Note can not be placed on string'));
-      expect(() => getFret('F/6', 1)).toThrowError(new Error('Note can not be placed on string'));
+      expect(() => getFret('Eb/2', 6)).toThrowError(new Error('Invalid fret'));
+      expect(() => getFret('G#/5', 5)).toThrowError(new Error('Invalid fret'));
+      expect(() => getFret('F/2', 2)).toThrowError(new Error('Invalid fret'));
+      expect(() => getFret('F/6', 1)).toThrowError(new Error('Invalid fret'));
     });
   });
 
@@ -160,10 +160,10 @@ describe('guitar', () => {
     });
 
     it('should throw', () => {
-      expect(() => getNote(-1, 2)).toThrowError(new Error('Can not get note'));
-      expect(() => getNote(25, 5)).toThrowError(new Error('Can not get note'));
-      expect(() => getNote(4, -1)).toThrowError(new Error('Can not get note'));
-      expect(() => getNote(4, 7)).toThrowError(new Error('Can not get note'));
+      expect(() => getNote(-1, 2)).toThrowError(new Error('Invalid note'));
+      expect(() => getNote(25, 5)).toThrowError(new Error('Invalid note'));
+      expect(() => getNote(4, -1)).toThrowError(new Error('Invalid note'));
+      expect(() => getNote(4, 7)).toThrowError(new Error('Invalid note'));
     });
   });
 

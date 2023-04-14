@@ -1,12 +1,15 @@
+import {
+  ERROR_TOO_LOW,
+  ERROR_TOO_HIGH,
+  ERROR_INVALID_NOTE,
+  ERROR_INVALID_FRET,
+  ERROR_FRET_POSITION,
+  ERROR_TOO_MANY_NOTES,
+} from '../constants/errors';
 import { getSortedChord, getStepDiff, shiftNote, shiftOct } from './notes';
 
 const STANDARD_TUNING = ['E/4', 'B/3', 'G/3', 'D/3', 'A/2', 'E/2'];
 const NUMBER_OF_GUITAR_STRINGS = STANDARD_TUNING.length;
-
-// TODO make error file?
-const ERROR_TOO_LOW = new Error('Note too low');
-const ERROR_TOO_HIGH = new Error('Note too high');
-const ERROR_FRETBOARD_POSITION = new Error('Could not position on guitar fretboard');
 
 const getFretboardPostionOnString = (transposedNote, str, lowestFret = 0, highestFret = 24) => {
   const fret = getStepDiff(STANDARD_TUNING[str - 1], transposedNote);
@@ -27,7 +30,7 @@ const getFretboardPostionBetweenStringRange = (note, strRange, lowestFret = 0, h
     })
     .filter(Boolean);
 
-  if (!positions?.length) throw ERROR_FRETBOARD_POSITION;
+  if (!positions?.length) throw ERROR_FRET_POSITION;
 
   return positions[0];
 };
@@ -51,12 +54,12 @@ export const getFretboardPosition = (note, lowestFret = 0, highestFret = 24) => 
       if ((str === 6 && e === ERROR_TOO_LOW) || (str === 1 && e === ERROR_TOO_HIGH)) throw e;
     }
   }
-  throw new Error(`Could not place note ${note} on guitar fret between ${lowestFret} and ${highestFret}`);
+  throw ERROR_FRET_POSITION;
 };
 
 export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) => {
-  if (lowestFret >= highestFret) throw ERROR_FRETBOARD_POSITION;
-  if (notes.length > NUMBER_OF_GUITAR_STRINGS) throw new Error('Too many notes');
+  if (lowestFret >= highestFret) throw ERROR_FRET_POSITION;
+  if (notes.length > NUMBER_OF_GUITAR_STRINGS) throw ERROR_TOO_MANY_NOTES;
   let ranges = [];
 
   const positions = getSortedChord(notes).map((note, index) => {
@@ -65,7 +68,7 @@ export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) =
 
     const range = getStringRange(index, notes.length);
     let position = getFretboardPosition(note, lowest, highest);
-    if (position.str < range[0] || position.str > range[1]) {
+    if (position.str < range[0] || position.str > range[range.length - 1]) {
       position = getFretboardPostionBetweenStringRange(note, range, lowest, highest);
     }
 
@@ -79,7 +82,7 @@ export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) =
     try {
       return getFretboardPositions(notes, lowestFret + 1, highestFret);
     } catch {
-      throw ERROR_FRETBOARD_POSITION;
+      throw ERROR_FRET_POSITION;
     }
   }
   return positions;
@@ -88,18 +91,18 @@ export const getFretboardPositions = (notes, lowestFret = 0, highestFret = 24) =
 export const getFret = (note, string) => {
   const openNote = STANDARD_TUNING[string - 1];
   const fret = getStepDiff(openNote, note);
-  if (fret < 0 || fret > 24) throw new Error('Note can not be placed on string');
+  if (fret < 0 || fret > 24) throw ERROR_INVALID_FRET;
   return fret;
 };
 
 export const getNote = (fret, string) => {
-  if (fret < 0 || fret > 24 || string < 1 || string > 6) throw new Error('Can not get note');
+  if (fret < 0 || fret > 24 || string < 1 || string > 6) throw ERROR_INVALID_NOTE;
   const openNote = STANDARD_TUNING[string - 1];
   return shiftNote(openNote, fret);
 };
 
 export const getNoteRange = (lowestFret = 0, highestFret = 24) => {
-  if (lowestFret > highestFret || lowestFret < 0 || highestFret > 24) throw new Error('Invalid fret');
+  if (lowestFret > highestFret || lowestFret < 0 || highestFret > 24) throw ERROR_INVALID_FRET;
 
   return [getNote(lowestFret, 6), getNote(highestFret, 1)];
 };

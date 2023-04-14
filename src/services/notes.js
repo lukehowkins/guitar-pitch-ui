@@ -1,3 +1,4 @@
+import { ERROR_INVALID_INTERVAL, ERROR_INVALID_NOTE, ERROR_TOO_HIGH, ERROR_TOO_LOW } from '../constants/errors';
 import { EQUIVALENT_NOTES, INTERVALS, NOTES } from '../constants/theory';
 
 export const getNoteAboveBelow = (isAbove, baseNote, interval) => {
@@ -5,7 +6,7 @@ export const getNoteAboveBelow = (isAbove, baseNote, interval) => {
   const index = NOTES.findIndex((value) => value === note || value === EQUIVALENT_NOTES[note]);
   const step = INTERVALS[interval];
 
-  if (!step) throw new Error(`unknown interval ${interval}`);
+  if (!step) throw ERROR_INVALID_INTERVAL;
 
   const newIndex = isAbove ? index + step : index - step;
   const octChange = Math.floor(newIndex / 12);
@@ -24,15 +25,13 @@ export const getNoteBelow = getNoteAboveBelow.bind(null, false);
 const getNoteIndex = (noteInfo) =>
   NOTES.findIndex((note) => noteInfo.note === note || EQUIVALENT_NOTES[noteInfo.note] === note);
 
-// should this be unrelated to guitar limitations?
 export const getNoteInfo = (key) => {
   const [note, oct] = key?.split('/') || [];
-  if (!note) throw new Error('Note missing');
-  if (!oct) throw new Error('Octave missing');
-  if (oct < 2) throw new Error('Octave too low');
-  if (oct > 7) throw new Error('Octave too high');
+  if (!note || !oct) throw ERROR_INVALID_NOTE;
+  if (oct < 1) throw ERROR_TOO_LOW;
+  if (oct > 7) throw ERROR_TOO_HIGH;
   if (note[0] > 'G' || note.length > 2 || (note[1] && note[1] !== '#' && note[1] !== 'b')) {
-    throw new Error('Invalid note');
+    throw ERROR_INVALID_NOTE;
   }
   return { note: note, oct: +oct };
 };

@@ -1,10 +1,11 @@
 import { Accidental, StaveNote } from 'vexflow';
 import { KEYS } from '../constants/theory';
+import { ERROR_INVALID_KEY } from '../constants/errors';
 import { getNoteInfo } from './notes';
 
 const getAccidental = (note, key = 'C') => {
   const nonAccidentals = KEYS[key];
-  if (!nonAccidentals) throw new Error(`key ${key} is unknown`);
+  if (!nonAccidentals) throw ERROR_INVALID_KEY;
   if (note.includes('#') && !nonAccidentals.includes(note)) {
     return '#';
   }
