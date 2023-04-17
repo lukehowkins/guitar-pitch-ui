@@ -1,5 +1,5 @@
 import { Formatter, Renderer, Stave, Stem, Voice, VoiceMode } from 'vexflow';
-import { getStaveChord, getStaveNote } from './staveNotes';
+import { getAccidentals, getStaveChord, getStaveNote } from './staveNotes';
 
 const MIN_WIDTH = 250;
 const MIN_WIDTH_PER_NOTE = 100;
@@ -39,11 +39,19 @@ export const generateStaveWithStaveNotes = (ref, staveNotes, key = 'C', secondVo
 };
 
 export const generateStaveWithNotes = (ref, notes, key, secondVoice, secondVoiceColor) => {
+  let currentAccidentals = [];
   const convertToStave = (note, color) => {
-    if (typeof note === 'string') return getStaveNote(note, key, color);
-    return getStaveChord(note, key, color);
+    if (typeof note === 'string') {
+      const staveNote = getStaveNote(note, key, color, currentAccidentals);
+      currentAccidentals = getAccidentals(staveNote, key, currentAccidentals);
+      return staveNote;
+    }
+    const staveChord = getStaveChord(note, key, color, currentAccidentals);
+    currentAccidentals = getAccidentals(staveChord, key, currentAccidentals);
+    return staveChord;
   };
   const staveNotes = notes.map((note) => convertToStave(note));
+  currentAccidentals = [];
   const staveSecondVoice = secondVoice && secondVoice.map((note) => convertToStave(note, secondVoiceColor));
   return generateStaveWithStaveNotes(ref, staveNotes, key, staveSecondVoice);
 };

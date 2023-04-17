@@ -24,26 +24,60 @@ const getAccidental = (note, key = 'C') => {
 };
 
 const addModifier =
-  (staveNote, keySignature) =>
+  (staveNote, keySignature, currentAccidentals) =>
   (pitch, index = 0) => {
     const { note } = getNoteInfo(pitch);
     const accidental = getAccidental(note, keySignature);
+    const letter = pitch[0];
 
-    if (accidental) staveNote.addModifier(new Accidental(accidental), index);
+    if (accidental && !currentAccidentals.includes(`${letter}${accidental}`)) {
+      staveNote.addModifier(new Accidental(accidental), index);
+    } else if (
+      !accidental &&
+      (currentAccidentals.includes(`${letter}#`) || currentAccidentals.includes(`${letter}b`))
+    ) {
+      staveNote.addModifier(new Accidental('n'), index);
+    }
   };
 
-export const getStaveNote = (pitch, keySignature = 'C', color = 'black') => {
+export const getStaveNote = (pitch, keySignature = 'C', color = 'black', currentAccidentals = []) => {
   const staveNote = new StaveNote({ keys: [pitch], duration: 4, auto_stem: true });
   staveNote.setStyle({ fillStyle: color, strokeStyle: color });
-  addModifier(staveNote, keySignature)(pitch);
+  addModifier(staveNote, keySignature, currentAccidentals)(pitch);
 
   return staveNote;
 };
 
-export const getStaveChord = (keys, keySignature = 'C', color = 'black') => {
+export const getStaveChord = (keys, keySignature = 'C', color = 'black', currentAccidentals = []) => {
   const staveNote = new StaveNote({ keys, duration: 4, auto_stem: true });
   staveNote.setStyle({ fillStyle: color, strokeStyle: color });
-  keys.forEach(addModifier(staveNote, keySignature));
+  keys.forEach(addModifier(staveNote, keySignature, currentAccidentals));
 
   return staveNote;
+};
+
+export const getAccidentals = (staveChord, keySignature = 'C', previousAccidentals = []) => {
+  let newAccidentals = staveChord.keys
+    ?.map?.(([letter, char2], index) => {
+      const accidental = char2 === '#' || char2 === 'b' ? char2 : 'n';
+      const modifier = staveChord.modifiers.find((mod) => mod.index === index);
+      const modAccidental = modifier?.type;
+
+      if (modAccidental) return `${letter}${modAccidental}`;
+
+      if (previousAccidentals.find(([prevLetter]) => letter === prevLetter)) {
+        const nonAccidentals = KEYS[keySignature];
+        const keyAccidental = nonAccidentals.find(([keyLetter]) => letter === keyLetter);
+        return keyAccidental || `${letter}${accidental}`;
+      }
+    })
+    .filter(Boolean);
+
+  const filteredAccidentals = previousAccidentals.filter(
+    ([letter]) => !newAccidentals.find(([newLetter]) => newLetter === letter)
+  );
+
+  // console.log('acc', filteredAccidentals, newAccidentals);
+
+  return [...filteredAccidentals, ...newAccidentals];
 };

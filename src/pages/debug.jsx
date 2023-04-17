@@ -11,9 +11,30 @@ import Metronome from '../components/metronome';
 export default function Debug() {
   return (
     <>
-      <Metronome />
+      <Metronome loop />
       {/* <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} /> */}
       <ImportXML />
+      <SingleStave
+        notes={[
+          'Db/5',
+          'D/5',
+          ['D/4', 'F/4'],
+          ['D/4', 'F#/4'],
+          'D#/5',
+          ['D#/5', 'F#/5'],
+          ['D/5', 'F/5'],
+          'D/5',
+          'Db/4',
+          'Db/4',
+        ]}
+      />
+
+      <SingleStave
+        key="D"
+        notes={['C#/6', ['C/6', 'E/6', 'G#/5'], ['Eb/5', 'G/6'], ['Eb/6', 'Gb/6 ']]}
+        secondVoice={['C#/5', ['C/4', 'E/4', 'G#/4'], ['Eb/4', 'G/4'], ['Eb/4', 'Gb/4']]}
+        secondVoiceColor="grey"
+      />
       <SingleStave
         staveNotes={[getStaveNote('C/4'), getStaveChord(['D/4', 'G/4', 'Bb/4']), getStaveChord(['E/5', 'Ab/5'])]}
         secondVoice={[

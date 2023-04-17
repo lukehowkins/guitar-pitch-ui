@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getStaveNote, getStaveChord } from './staveNotes';
+import { getStaveNote, getStaveChord, getAccidentals } from './staveNotes';
 
 describe('notes', () => {
   describe('getStaveNote', () => {
@@ -24,6 +24,11 @@ describe('notes', () => {
       expect(note3.duration).toEqual('4');
       expect(note3.modifiers).toHaveLength(0);
       expect(note3.keys).toEqual(['F#/4']);
+
+      const note4 = getStaveNote('F/4', 'D', 'black', ['Fn']);
+      expect(note4.duration).toEqual('4');
+      expect(note4.modifiers).toHaveLength(0);
+      expect(note4.keys).toEqual(['F/4']);
     });
 
     it('should return note with accidentals', () => {
@@ -46,6 +51,16 @@ describe('notes', () => {
       expect(note4.duration).toEqual('4');
       expect(note4.modifiers[0].accidental.code).toEqual('accidentalFlat');
       expect(note4.keys).toEqual(['Bb/4']);
+
+      const note5 = getStaveNote('F/4', 'C', 'black', ['F#']);
+      expect(note5.duration).toEqual('4');
+      expect(note5.modifiers[0].accidental.code).toEqual('accidentalNatural');
+      expect(note5.keys).toEqual(['F/4']);
+
+      const note6 = getStaveNote('F/4', 'D', 'black', ['D#']);
+      expect(note6.duration).toEqual('4');
+      expect(note6.modifiers[0].accidental.code).toEqual('accidentalNatural');
+      expect(note6.keys).toEqual(['F/4']);
     });
   });
 
@@ -72,6 +87,16 @@ describe('notes', () => {
       expect(chord3.duration).toEqual('4');
       expect(chord3.modifiers).toHaveLength(0);
       expect(chord3.keys).toEqual(['F#/4', 'C/5']);
+
+      const chord4 = getStaveChord(['F/4', 'C/5'], 'D', 'black', ['Fn', 'Cn']);
+      expect(chord4.duration).toEqual('4');
+      expect(chord4.modifiers).toHaveLength(0);
+      expect(chord4.keys).toEqual(['F/4', 'C/5']);
+
+      const chord7 = getStaveChord(['D#/5', 'F#/5'], 'C', 'black', ['F#', 'D#']);
+      expect(chord7.duration).toEqual('4');
+      expect(chord7.modifiers).toHaveLength(0);
+      expect(chord7.keys).toEqual(['D#/5', 'F#/5']);
     });
 
     it('should return chord with accidentals', () => {
@@ -105,6 +130,83 @@ describe('notes', () => {
       expect(chord4.modifiers[1].accidental.code).toEqual('accidentalNatural');
       expect(chord4.modifiers[1].index).toEqual(2);
       expect(chord4.keys).toEqual(['Bb/4', 'D#/5', 'F/5']);
+
+      const chord5 = getStaveChord(['F#/4', 'C/5', 'G/5'], 'D', 'black', ['G#']);
+      expect(chord5.duration).toEqual('4');
+      expect(chord5.modifiers).toHaveLength(2);
+      expect(chord5.modifiers[0].accidental.code).toEqual('accidentalNatural');
+      expect(chord5.modifiers[0].index).toEqual(1);
+      expect(chord5.modifiers[1].accidental.code).toEqual('accidentalNatural');
+      expect(chord5.modifiers[1].index).toEqual(2);
+      expect(chord5.keys).toEqual(['F#/4', 'C/5', 'G/5']);
+
+      const chord6 = getStaveChord(['D/4', 'F/4'], 'C', 'black', ['D#', 'F#']);
+      expect(chord6.duration).toEqual('4');
+      expect(chord6.modifiers).toHaveLength(2);
+      expect(chord6.modifiers[0].accidental.code).toEqual('accidentalNatural');
+      expect(chord6.modifiers[0].index).toEqual(0);
+      expect(chord6.modifiers[1].accidental.code).toEqual('accidentalNatural');
+      expect(chord6.modifiers[1].index).toEqual(1);
+      expect(chord6.keys).toEqual(['D/4', 'F/4']);
+    });
+  });
+
+  describe('getAccidentals', () => {
+    it('should get accidentals', () => {
+      let staveNote = getStaveNote('C/4');
+      expect(getAccidentals(staveNote)).toEqual([]);
+      staveNote = getStaveNote('Bb/4');
+      expect(getAccidentals(staveNote)).toEqual(['Bb']);
+      staveNote = getStaveNote('Bb/4', 'F');
+      expect(getAccidentals(staveNote, 'F')).toEqual([]);
+      staveNote = getStaveNote('D#/4');
+      expect(getAccidentals(staveNote, 'Am', ['Bb'])).toEqual(['Bb', 'D#']);
+      staveNote = getStaveNote('F#/4', 'D');
+      expect(getAccidentals(staveNote)).toEqual([]);
+      staveNote = getStaveNote('Eb/4', 'C', 'black', ['Eb']);
+      expect(getAccidentals(staveNote, 'C')).toEqual([]);
+    });
+
+    it('should override accidentals of same letter', () => {
+      let staveNote = getStaveNote('C/4');
+      expect(getAccidentals(staveNote, 'C', ['C#'])).toEqual(['Cn']);
+      staveNote = getStaveNote('Bb/4', 'F');
+      expect(getAccidentals(staveNote, 'F', ['Bn'])).toEqual(['Bb']);
+      staveNote = getStaveNote('B/4', 'F');
+      expect(getAccidentals(staveNote, 'F')).toEqual(['Bn']);
+      staveNote = getStaveNote('D#/4');
+      expect(getAccidentals(staveNote, 'C', ['Ab', 'Db'])).toEqual(['Ab', 'D#']);
+      staveNote = getStaveNote('Eb/4', 'C', 'black', ['Eb']);
+      expect(getAccidentals(staveNote, 'C', ['Eb'])).toEqual(['Eb']);
+      staveNote = getStaveNote('Eb/4', 'Eb', 'black', ['En']);
+      expect(getAccidentals(staveNote, 'Eb', ['En'])).toEqual(['Eb']);
+    });
+
+    it('should get accidentals for chord', () => {
+      let staveChord = getStaveChord(['C/4', 'E/4']);
+      expect(getAccidentals(staveChord)).toEqual([]);
+      staveChord = getStaveChord(['Eb/5', 'Ab/5']);
+      expect(getAccidentals(staveChord, 'C', ['Eb', 'Ab'])).toEqual(['Eb', 'Ab']);
+      staveChord = getStaveChord(['C/4', 'E/4']);
+      expect(getAccidentals(staveChord, 'C', ['C#'])).toEqual(['Cn']);
+      staveChord = getStaveChord(['Cb/4', 'E#/4']);
+      expect(getAccidentals(staveChord)).toEqual(['Cb', 'E#']);
+      staveChord = getStaveChord(['Cb/4', 'F#/4', 'A/4'], 'D');
+      expect(getAccidentals(staveChord)).toEqual(['Cb']);
+      staveChord = getStaveChord(['Cb/4', 'F#/4', 'A/4'], 'D');
+      expect(getAccidentals(staveChord, 'D', ['Fn', 'Ab', 'C#'])).toEqual(['Cb', 'F#', 'An']);
+
+      staveChord = getStaveChord(['D#/4', 'F#/4'], 'C', 'black', ['F#', 'D#']);
+      expect(getAccidentals(staveChord, 'C', ['F#', 'D#'])).toEqual(['D#', 'F#']);
+    });
+
+    it('should override accidentals for chord', () => {
+      let staveChord = getStaveChord(['C/4', 'E/4']);
+      expect(getAccidentals(staveChord, 'C', ['C#', 'E#', 'G#'])).toEqual(['G#', 'Cn', 'En']);
+      staveChord = getStaveChord(['D/4', 'F#/4', 'Ab/4'], 'D');
+      expect(getAccidentals(staveChord, 'D', ['C#', 'Fn'])).toEqual(['C#', 'F#', 'Ab']);
+      staveChord = getStaveChord(['Bb/4', 'D/5', 'F/5']);
+      expect(getAccidentals(staveChord, 'C', ['D#', 'F#'])).toEqual(['Bb', 'Dn', 'Fn']);
     });
   });
 });

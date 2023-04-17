@@ -1,7 +1,7 @@
 import React from 'react';
 import { getFretboardPositions } from '../../services/guitar';
 import { areChordsSame, getNoteAbove } from '../../services/notes';
-import { getStaveChord } from '../../services/staveNotes';
+import { getAccidentals, getStaveChord } from '../../services/staveNotes';
 import { useUserStore } from '../../store/user';
 import GuitarFretboard from '../guitarFredboard';
 import GuitarTab from '../guitarTab';
@@ -12,9 +12,10 @@ export default function DoubleTrouble({ keySignature, note, interval, lowestFret
   const doubleStop = [note, getNoteAbove(note, interval)];
   const staveDoubleStop = getStaveChord(doubleStop, keySignature);
   const isCorrect = areChordsSame(doubleStop, answer);
-  const staveNotes = [staveDoubleStop, answer && !isCorrect && getStaveChord(answer, keySignature, 'red')].filter(
-    Boolean
-  );
+  const staveNotes = [
+    staveDoubleStop,
+    answer && !isCorrect && getStaveChord(answer, keySignature, 'red', getAccidentals(staveDoubleStop)),
+  ].filter(Boolean);
 
   return (
     <div>

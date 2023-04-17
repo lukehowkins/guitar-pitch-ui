@@ -1,7 +1,7 @@
 import React from 'react';
 import { getFretboardPositions } from '../../services/guitar';
 import { areChordsSame } from '../../services/notes';
-import { getStaveChord } from '../../services/staveNotes';
+import { getAccidentals, getStaveChord } from '../../services/staveNotes';
 import { useUserStore } from '../../store/user';
 import GuitarFretboard from '../guitarFredboard';
 import GuitarTab from '../guitarTab';
@@ -11,7 +11,10 @@ export default function TriadMaster({ keySignature, triad, lowestFret, highestFr
   const { showGuitarFretboard, showTab } = useUserStore();
   const staveChord = getStaveChord(triad, keySignature);
   const isCorrect = areChordsSame(triad, answer);
-  const staveNotes = [staveChord, answer && !isCorrect && getStaveChord(answer, keySignature, 'red')].filter(Boolean);
+  const staveNotes = [
+    staveChord,
+    answer && !isCorrect && getStaveChord(answer, keySignature, 'red', getAccidentals(staveChord)),
+  ].filter(Boolean);
 
   return (
     <div>
