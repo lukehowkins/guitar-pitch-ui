@@ -6,6 +6,7 @@ import { useGameStore } from '../store/game';
 import Difficulty from './difficulty';
 import GAMES from './games';
 import Loading from './loading';
+import Metronome from './metronome';
 
 function Game({ answer, onNext }) {
   const difficultySetup = useGameStore();
@@ -42,6 +43,7 @@ function Game({ answer, onNext }) {
       </div>
       <h2>{GAME_LABELS[game]}</h2>
       <CurrentGame {...gameSetup} {...difficultySetup} answer={answer} onDone={handleNext} />
+      {!answer && <Metronome finishMessage="Play now" tempo={60 + difficultySetup.difficulty * 10} countDown />}
     </div>
   );
 }

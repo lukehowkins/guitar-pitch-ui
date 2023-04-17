@@ -6,10 +6,12 @@ import SingleStave from '../components/singleStave';
 import { getFretboardPositions } from '../services/guitar';
 import { getStaveChord, getStaveNote } from '../services/staveNotes';
 import { getTabChord, getTabNote } from '../services/tabNote';
+import Metronome from '../components/metronome';
 
 export default function Debug() {
   return (
     <>
+      <Metronome />
       {/* <AudioVisualiser inputType={type} preferredDeviceId={preferredDeviceId} /> */}
       <ImportXML />
       <SingleStave
