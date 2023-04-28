@@ -79,9 +79,9 @@ describe('notes', () => {
     });
 
     it('should get note info', () => {
-      expect(getNoteInfo('Bb/4')).toEqual({ note: 'Bb', oct: 4 });
-      expect(getNoteInfo('C/5')).toEqual({ note: 'C', oct: 5 });
-      expect(getNoteInfo('F#/3')).toEqual({ note: 'F#', oct: 3 });
+      expect(getNoteInfo('Bb/4')).toEqual({ note: 'Bb', letter: 'B', accidental: 'b', oct: 4 });
+      expect(getNoteInfo('C/5')).toEqual({ note: 'C', letter: 'C', oct: 5 });
+      expect(getNoteInfo('F#/3')).toEqual({ note: 'F#', letter: 'F', accidental: '#', oct: 3 });
     });
   });
 

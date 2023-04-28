@@ -77,7 +77,5 @@ export const getAccidentals = (staveChord, keySignature = 'C', previousAccidenta
     ([letter]) => !newAccidentals.find(([newLetter]) => newLetter === letter)
   );
 
-  // console.log('acc', filteredAccidentals, newAccidentals);
-
   return [...filteredAccidentals, ...newAccidentals];
 };

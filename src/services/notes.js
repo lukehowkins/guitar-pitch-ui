@@ -33,7 +33,7 @@ export const getNoteInfo = (key) => {
   if (note[0] > 'G' || note.length > 2 || (note[1] && note[1] !== '#' && note[1] !== 'b')) {
     throw ERROR_INVALID_NOTE;
   }
-  return { note: note, oct: +oct };
+  return { note, letter: note[0], accidental: note[1], oct: +oct };
 };
 
 export const getStepDiff = (baseNote, note) => {
