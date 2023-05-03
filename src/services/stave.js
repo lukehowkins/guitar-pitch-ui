@@ -1,9 +1,11 @@
 import { Formatter, Renderer, Stave, Stem, Voice, VoiceMode } from 'vexflow';
+import { KEYS } from '../constants/theory';
 import { getAccidentals, getStaveChord, getStaveNote } from './staveNotes';
 import { getSortedChord, getStepDiff } from './notes';
 
-const MIN_WIDTH = 250 + Stave.defaultPadding;
-const MIN_WIDTH_PER_NOTE = 100;
+const MIN_WIDTH = 500;
+const MIN_WIDTH_PER_NOTE = 40;
+const TREBEL_CLEF_WIDTH = 36;
 const HEIGHT = 200;
 
 const getStemDirection = (sortedChord1, sortedChord2) => {
@@ -24,13 +26,17 @@ const getStemDirection = (sortedChord1, sortedChord2) => {
 
 export const generateStaveWithStaveNotes = (ref, staveNotes, key = 'C', staveSecondVoice) => {
   ref.innerHTML = '';
-  const width = Math.min(Math.max(ref.clientWidth, MIN_WIDTH), staveNotes.length * MIN_WIDTH_PER_NOTE + 200);
-  const staveWidth = width - 80;
+  const keySignatureWidth = KEYS[key].length * 20;
+  const minWidthPerNote = staveSecondVoice ? 2 * MIN_WIDTH_PER_NOTE : MIN_WIDTH_PER_NOTE;
+  const width = Math.max(
+    Math.min(MIN_WIDTH, ref.clientWidth),
+    staveNotes.length * minWidthPerNote + TREBEL_CLEF_WIDTH + keySignatureWidth
+  );
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
   renderer.resize(width, HEIGHT);
   const context = renderer.getContext();
 
-  const stave = new Stave(10, 40, staveWidth);
+  const stave = new Stave(0, 40, width - 1);
   stave.addClef('treble').addKeySignature(key);
   stave.setContext(context).draw();
 
@@ -54,7 +60,7 @@ export const generateStaveWithStaveNotes = (ref, staveNotes, key = 'C', staveSec
     voice2.addTickables(staveSecondVoice);
 
     const voices = [voice1, voice2];
-    new Formatter().joinVoices(voices).format(voices, staveWidth);
+    new Formatter().joinVoices(voices).format(voices, width);
     voices.forEach((voice) => voice.draw(context, stave));
   } else {
     Formatter.FormatAndDraw(context, stave, staveNotes);

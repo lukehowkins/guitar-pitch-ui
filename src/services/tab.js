@@ -2,8 +2,9 @@ import { Renderer, TabNote, TabStave, TickContext } from 'vexflow';
 import { getTabChord, getTabNote } from './tabNote';
 
 const MIN_WIDTH = 250;
-const MIN_WIDTH_PER_NOTE = 100;
-const HEIGHT = 200;
+const MIN_WIDTH_PER_NOTE = 40;
+const TAB_CLEF_WIDTH = 20;
+const HEIGHT = 90;
 
 function showNote(tabNote, stave, ctx, x) {
   const tickContext = new TickContext();
@@ -15,12 +16,12 @@ function showNote(tabNote, stave, ctx, x) {
 
 export const generateTabWithTabNotes = (ref, tabNotes) => {
   ref.innerHTML = '';
-  const width = Math.min(Math.max(ref.clientWidth, MIN_WIDTH), tabNotes.length * MIN_WIDTH_PER_NOTE + 200);
+  const width = Math.min(Math.max(ref.clientWidth, MIN_WIDTH), tabNotes.length * MIN_WIDTH_PER_NOTE + TAB_CLEF_WIDTH);
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
   renderer.resize(width, HEIGHT);
   const context = renderer.getContext();
 
-  const stave = new TabStave(10, 40, width - 80);
+  const stave = new TabStave(0, -40, width - 1);
   stave.addClef('tab');
   stave.setContext(context).draw();
 
