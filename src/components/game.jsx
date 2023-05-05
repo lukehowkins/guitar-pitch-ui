@@ -1,19 +1,17 @@
 import React, { memo, useEffect, useState } from 'react';
-import { GAME_LABELS } from '../constants/games';
+import { getNextQuestion } from '../services/api';
 import { areChordsSame } from '../services/notes';
-import { getNextGame } from '../services/test';
 import { useGameStore } from '../store/game';
-import Difficulty from './difficulty';
-import GAMES from './games';
+import GameSetup from './gameSetup';
 import Loading from './loading';
 import Metronome from './metronome';
 
 function Game({ answer, onNext }) {
-  const difficultySetup = useGameStore();
-  const [turnCount, setTurnCount] = useState(0);
+  const { Component, total, label, reset: clearGame, ...game } = useGameStore();
+  const [isLoading, setIsLoading] = useState(true);
+  const [turnCount, setTurnCount] = useState(1);
   const [score, setScore] = useState(0);
-  const [{ game, ...gameSetup }, setGameSetup] = useState({});
-  const CurrentGame = GAMES[game];
+  const [gameSetup, setGameSetup] = useState({});
 
   const handleNext = (isCorrect) => {
     setTurnCount(turnCount + 1);
@@ -22,28 +20,38 @@ function Game({ answer, onNext }) {
   };
 
   useEffect(() => {
-    if (difficultySetup?.games?.length) {
-      const setup = getNextGame(difficultySetup, turnCount);
-      setGameSetup(setup);
+    if (total && turnCount <= total) {
+      getNextQuestion('TODO, game id', game)
+        .then(setGameSetup)
+        .finally(() => setIsLoading(false));
     }
-  }, [turnCount, difficultySetup]);
+  }, [turnCount, total]);
 
-  if (!difficultySetup?.games?.length) return <Difficulty />;
+  if (!Component) return <GameSetup />;
 
-  if (!CurrentGame) return <Loading />;
+  if (isLoading) return <Loading />;
+
+  if (turnCount > total) {
+    return (
+      <p>
+        Score: {score} / {total}
+        <button onClick={clearGame}>Pick new game</button>
+      </p>
+    );
+  }
 
   return (
     <div>
       <div>
-        Turn {turnCount + 1}. Score {score}
+        Turn {turnCount} of {total}. Score {score}
         <br />
-        Difficulty {difficultySetup.difficulty} / 10
+        Difficulty {game.difficulty} / 10
         <br />
-        Play between frets {difficultySetup.lowestFret} and {difficultySetup.highestFret}
+        Play between frets {game.lowestFret} and {game.highestFret}
       </div>
-      <h2>{GAME_LABELS[game]}</h2>
-      <CurrentGame {...gameSetup} {...difficultySetup} answer={answer} onDone={handleNext} />
-      {!answer && <Metronome finishMessage="Play now" tempo={60 + difficultySetup.difficulty * 10} countDown />}
+      <h2>{label}</h2>
+      <Component {...gameSetup} {...game} answer={answer} onDone={handleNext} />
+      {!answer && <Metronome finishMessage="Play now" tempo={60 + game.difficulty * 10} countDown />}
     </div>
   );
 }

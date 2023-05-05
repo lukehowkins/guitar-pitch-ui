@@ -1,3 +1,5 @@
+import { getNextGame } from './test';
+
 let mockUser = {
   id: 1,
   name: 'Luke',
@@ -19,4 +21,9 @@ export const updateUser = (newUser) => {
   mockUser = newUser;
   console.log('fake update user ep', newUser);
   return Promise.resolve(newUser);
+};
+
+// TODO when link with BE, remove game
+export const getNextQuestion = (gameId, game) => {
+  return Promise.resolve(getNextGame(game));
 };

@@ -48,10 +48,7 @@ const GAME_SETUPS = {
   },
 };
 
-export const getNextGame = (difficulty, turn) => {
-  const game = difficulty.games[turn % difficulty.games.length];
-  const setup = GAME_SETUPS[game];
-  const props = setup(difficulty);
-
-  return { game, ...props };
+export const getNextGame = (game) => {
+  const setup = GAME_SETUPS[game.type];
+  return setup(game);
 };

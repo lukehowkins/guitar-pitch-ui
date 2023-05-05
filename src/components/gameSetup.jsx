@@ -3,37 +3,39 @@ import React, { useState } from 'react';
 import { GAME_LABELS } from '../constants/games';
 import { useGameStore } from '../store/game';
 
-export default function Difficulty() {
-  const setGames = useGameStore((state) => state.setGames);
+export default function GameSetup() {
+  const setType = useGameStore((state) => state.setType);
   const setDifficulty = useGameStore((state) => state.setDifficulty);
   const setRange = useGameStore((state) => state.setRange);
+  const setTotal = useGameStore((state) => state.setTotal);
   const [formData, setFormData] = useState({
-    games: Object.keys(GAME_LABELS),
+    game: Object.keys(GAME_LABELS)[0],
     difficulty: 0,
     lowestFret: 0,
     highestFret: 24,
+    total: 10,
   });
 
   const handleChange = (e) => {
-    const { value } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: value === '' ? '' : +value,
+      [name]: value,
     });
   };
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    const games = checked ? [...formData.games, name] : formData.games.filter((value) => value !== name);
+  const handleNumberChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      games,
+      [name]: value === '' ? '' : +value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setGames(formData.games);
+    setType(formData.game);
+    setTotal(formData.total);
     setDifficulty(formData.difficulty);
     setRange(formData.lowestFret, formData.highestFret);
   };
@@ -41,12 +43,30 @@ export default function Difficulty() {
   return (
     <form onSubmit={handleSubmit} className="difficulty">
       <label>
+        Total questions:
+        <input type="number" min={0} max={50} name="total" value={formData.total} onChange={handleNumberChange} />
+      </label>
+      <label>
         Difficulty
-        <input type="number" min={0} max={10} name="difficulty" value={formData.difficulty} onChange={handleChange} />
+        <input
+          type="number"
+          min={0}
+          max={10}
+          name="difficulty"
+          value={formData.difficulty}
+          onChange={handleNumberChange}
+        />
       </label>
       <label>
         Lowest fret
-        <input type="number" min={0} max={20} name="lowestFret" value={formData.lowestFret} onChange={handleChange} />
+        <input
+          type="number"
+          min={0}
+          max={20}
+          name="lowestFret"
+          value={formData.lowestFret}
+          onChange={handleNumberChange}
+        />
       </label>
       <label>
         Highest fret
@@ -56,14 +76,14 @@ export default function Difficulty() {
           max={24}
           name="highestFret"
           value={formData.highestFret}
-          onChange={handleChange}
+          onChange={handleNumberChange}
         />
       </label>
 
-      <label>Games:</label>
+      <label>Game:</label>
       {Object.entries(GAME_LABELS).map(([name, label]) => (
         <label key={name}>
-          <input type="checkbox" name={name} onChange={handleCheckboxChange} checked={formData.games.includes(name)} />
+          <input type="radio" name="game" value={name} onChange={handleChange} checked={formData.game === name} />
           {label}
         </label>
       ))}
