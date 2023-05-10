@@ -1,4 +1,4 @@
-import './difficulty.scss';
+import './gameSetup.scss';
 import React, { useState } from 'react';
 import { GAME_LABELS } from '../constants/games';
 import { useGameStore } from '../store/game';
@@ -41,7 +41,7 @@ export default function GameSetup() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="difficulty">
+    <form onSubmit={handleSubmit} className="game-setup">
       <label>
         Total questions:
         <input type="number" min={0} max={50} name="total" value={formData.total} onChange={handleNumberChange} />
