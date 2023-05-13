@@ -1,15 +1,14 @@
 import React from 'react';
 import SingleStave from '../singleStave';
 import { getStaveNote } from '../../services/staveNotes';
-import { DURATION_LABELS } from '../../constants/theory';
+import { BEATS_LABEL } from '../../constants/theory';
 
 // TODO answer should always be array
 export default function RhythmRumble({ timeSignature, rhythm, preferredNote = 'E/4', answer, onDone }) {
-  const isCorrect =
-    rhythm?.length === answer?.length && rhythm.every((duration1, index) => duration1 === answer[index]);
+  const isCorrect = rhythm?.length === answer?.length && rhythm.every((beats, index) => beats == answer[index]);
 
-  const staveNotes = rhythm.map((duration) => getStaveNote(preferredNote, duration));
-  const staveAnswer = answer?.map((duration) => getStaveNote(preferredNote, duration, 'C', 'red'));
+  const staveNotes = rhythm.map((beats) => getStaveNote(preferredNote, beats));
+  const staveAnswer = answer?.map((beats) => getStaveNote(preferredNote, beats, 'C', 'red'));
 
   return (
     <div>
@@ -24,7 +23,7 @@ export default function RhythmRumble({ timeSignature, rhythm, preferredNote = 'E
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
           <p>{rhythm.join(' ')}</p>
-          <p>{rhythm.map((duration) => DURATION_LABELS[duration]).join(' ')}</p>
+          <p>{rhythm.map((beats) => BEATS_LABEL[beats]).join(' ')}</p>
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

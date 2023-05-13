@@ -17,6 +17,7 @@ export default function Debug() {
 
       <h4>Accidentals</h4>
       <SingleStave
+        timeSignature="10/4"
         notes={[
           'Db/5',
           'D/5',
@@ -42,6 +43,7 @@ export default function Debug() {
       <h4>Same notes are drawn together, even if they have different accidentals (TODO fix somehow)</h4>
       <SingleStave
         keySignature="Dm"
+        timeSignature="8/4"
         notes={['C/4', 'D/4', 'E/4', 'F/4', 'G/4', 'Ab/4', 'B/4', ['C/4', 'E/4', 'G/4', 'B/4']]}
         secondVoice={['C#/4', 'D/4', 'Eb/4', 'F#/4', 'G/4', 'A/4', 'Bb/4', ['C#/4', 'Eb/4', 'G/4', 'Bb/4']]}
         secondVoiceColor="steelblue"
@@ -50,15 +52,15 @@ export default function Debug() {
       <h4>Stave notes can be passed in directly with different colour notes</h4>
       <SingleStave
         staveNotes={[
-          getStaveNote('C/4', 8, 'C', 'blue'),
-          getStaveChord(['D/4', 'G/4', 'Bb/4'], 8),
+          getStaveNote('C/4', 2, 'C', 'blue'),
+          getStaveChord(['D/4', 'G/4', 'Bb/4'], 2),
           getStaveChord(['E/5', 'Ab/5']),
           getStaveChord(['C/5', 'G/4', 'C/4']),
           getStaveChord(['C/5', 'G/4', 'C/4']),
         ]}
         secondVoice={[
-          getStaveNote('F#/4', 8, 'C', 'red'),
-          getStaveChord(['F/4', 'G#/4', 'A/4'], 8, 'C', 'red'),
+          getStaveNote('F#/4', 2, 'C', 'red'),
+          getStaveChord(['F/4', 'G#/4', 'A/4'], 2, 'C', 'red'),
           getStaveChord(['E#/5', 'A/5'], 4, 'C', 'blue'),
           getStaveChord(['C/3', 'G/3', 'E/4'], 4, 'C', 'orange'),
           getStaveChord(['C/5', 'G/4', 'E/4'], 4, 'C', 'orange'),
@@ -79,6 +81,7 @@ export default function Debug() {
           ['Bb/6', 'E/7'],
         ]}
         keySignature="D"
+        timeSignature="5/4"
         secondVoiceColor="red"
       />
 
@@ -117,9 +120,13 @@ export default function Debug() {
         timeSignature="4/4"
         staveNotes={[
           getStaveNote('C/5', 1),
+          getStaveNote('C/5', 1.5),
           getStaveNote('C/5', 2),
+          getStaveNote('C/5', 3),
           getStaveNote('C/5', 4),
+          getStaveNote('C/5', 6),
           getStaveNote('C/5', 8),
+          getStaveNote('C/5', 12),
           getStaveNote('C/5', 16),
         ]}
       />
@@ -128,30 +135,51 @@ export default function Debug() {
         timeSignature="6/8"
         staveNotes={[
           getStaveNote('C/5', 1),
+          getStaveNote('C/5', 1.5),
           getStaveNote('C/5', 2),
+          getStaveNote('C/5', 3),
           getStaveNote('C/5', 4),
+          getStaveNote('C/5', 6),
           getStaveNote('C/5', 8),
+          getStaveNote('C/5', 12),
           getStaveNote('C/5', 16),
+        ]}
+      />
+
+      <p>TODO why cutting off</p>
+      <SingleStave
+        timeSignature="6/8"
+        staveNotes={[
+          getStaveNote('C/5', 8),
+          getStaveNote('C/5', 1),
+          getStaveNote('C/5', 1),
+          getStaveNote('C/5', 1),
+          getStaveNote('C/5', 1),
+        ]}
+        secondVoice={[
+          getStaveNote('C/5', 8, 'C', 'blue'),
+          getStaveNote('C/5', 3, 'C', 'blue'),
+          getStaveNote('C/5', 1, 'C', 'blue'),
         ]}
       />
 
       <p>2 voices, stem direction based on first note comparison</p>
       <SingleStave
-        timeSignature="4/4"
-        staveNotes={[getStaveNote('C/4', 4), getStaveNote('E/4', 4), getStaveNote('G/4', 2)]}
-        secondVoice={[getStaveNote('E/5', 2), getStaveNote('D/5', 4), getStaveNote('C/5', 4)]}
+        timeSignature="5/4"
+        staveNotes={[getStaveNote('C/4', 4), getStaveNote('E/4', 4), getStaveNote('G/4', 12)]}
+        secondVoice={[getStaveNote('E/5', 8), getStaveNote('D/5', 4), getStaveNote('C/5', 8)]}
       />
 
       <SingleStave
         timeSignature="4/4"
-        staveNotes={[getStaveChord(['C/4', 'G/3'], 2), getStaveNote('E/4', 4), getStaveNote('G/4', 4)]}
+        staveNotes={[getStaveChord(['C/4', 'G/3'], 8), getStaveNote('E/4', 4), getStaveNote('G/4', 6)]}
         secondVoice={[
           getStaveNote('E/5', 4, 'C', 'blue'),
-          getStaveNote('D/5', 8, 'C', 'blue'),
-          getStaveNote('C/5', 8, 'C', 'blue'),
-          getStaveNote('B/4', 8, 'C', 'blue'),
-          getStaveNote('C/4', 8, 'C', 'blue'),
-          getStaveChord(['C/4', 'C/5'], 4, 'C', 'blue'),
+          getStaveNote('D/5', 2, 'C', 'blue'),
+          getStaveNote('C/5', 2, 'C', 'blue'),
+          getStaveNote('B/4', 2, 'C', 'blue'),
+          getStaveNote('C/4', 2, 'C', 'blue'),
+          getStaveChord(['C/4', 'C/5'], 6, 'C', 'blue'),
         ]}
       />
 
@@ -159,12 +187,12 @@ export default function Debug() {
       <SingleStave
         timeSignature="5/4"
         staveNotes={[
-          getStaveNote('C/7', 8),
-          getStaveNote('C/6', 8),
-          getStaveNote('C/5', 8),
-          getStaveNote('C/4', 8),
-          getStaveNote('C/3', 8),
-          getStaveNote('C/5', 8),
+          getStaveNote('C/7', 2),
+          getStaveNote('C/6', 2),
+          getStaveNote('C/5', 2),
+          getStaveNote('C/4', 2),
+          getStaveNote('C/3', 2),
+          getStaveNote('C/5', 2),
           getStaveNote('C/7', 4),
           getStaveNote('C/3', 4),
         ]}

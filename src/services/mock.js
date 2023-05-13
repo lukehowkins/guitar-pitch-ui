@@ -1,4 +1,5 @@
-import { NOTES, KEYS, INTERVALS, TIMESIGNATURES, DURATIONS } from '../constants/theory';
+import { ERROR_TOO_MANY_BEATS } from '../constants/errors';
+import { NOTES, KEYS, INTERVALS, TIMESIGNATURES, BEATS } from '../constants/theory';
 import { getNoteAbove, getNoteBelow, getNoteInfo, getSortedChord, getStepDiff } from './notes';
 
 const getRandomNumber = (n) => Math.floor(Math.random() * n);
@@ -72,32 +73,21 @@ export const getRandomTriad = (lowestNote = 'E/3', highestNote = 'E/6') => {
 const rhythmHelper = (totalBeats, supportedBeats, rhythm = []) => {
   const currentDuration = rhythm.reduce((sum, current) => sum + current, 0);
   if (currentDuration === totalBeats) return rhythm;
-  if (currentDuration > totalBeats) throw new Error('TODO');
-  const durationLeft = totalBeats - currentDuration;
-  if (supportedBeats.includes(durationLeft) && getRandomNumber(2) > 1) return [...rhythm, durationLeft];
-  const nextDuration = getRandomEl(supportedBeats);
-  if (nextDuration + currentDuration > totalBeats) return rhythmHelper(totalBeats, supportedBeats, rhythm);
+  if (currentDuration > totalBeats) throw ERROR_TOO_MANY_BEATS;
+  const beatsLeft = totalBeats - currentDuration;
+  const supportedPossibleBeats = supportedBeats.filter((beats) => beats <= beatsLeft);
+  if (!supportedPossibleBeats.length) return rhythmHelper(totalBeats, supportedBeats);
+  if (supportedPossibleBeats.includes(beatsLeft) && getRandomNumber(2) > 1) return [...rhythm, beatsLeft];
+  const nextDuration = getRandomEl(supportedPossibleBeats);
+  if (nextDuration + currentDuration > totalBeats) return rhythmHelper(totalBeats, supportedPossibleBeats, rhythm);
   const newRhythm = [...rhythm, nextDuration];
   return rhythmHelper(totalBeats, supportedBeats, newRhythm);
 };
 
-const DURATIONS_TO_BEAT_MAP = {
-  1: 16,
-  2: 8,
-  4: 4,
-  8: 2,
-  16: 1,
-};
-const BEAT_TO_DURATIONS_MAP = Object.fromEntries(
-  Object.entries(DURATIONS_TO_BEAT_MAP).map(([key, value]) => [value, key])
-);
-
 export const getRandomRhythm = (timeSignature, difficulty) => {
   const [numerator, denominator] = timeSignature.split('/');
-  const durations = DURATIONS.slice(0, 2 + Math.floor(difficulty / 2));
-  const beats = durations.map((duration) => DURATIONS_TO_BEAT_MAP[duration]);
+  const beats = BEATS.slice(0, 2 + difficulty);
   const totalBeats = (16 * numerator) / denominator;
 
-  const beatRhythm = rhythmHelper(totalBeats, beats);
-  return beatRhythm.map((beat) => BEAT_TO_DURATIONS_MAP[beat]);
+  return rhythmHelper(totalBeats, beats);
 };

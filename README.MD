@@ -30,3 +30,6 @@ A standard guitar's range is E/2 pitch (E/3 staved) to E/6 (E/7 staved)
 - Rhythm game - answer has to be array?
 - Beam notes
 - tie notes
+- dotted notes shouldn't be based on a label
+- fix high note not down stem
+- fix cutting off notes

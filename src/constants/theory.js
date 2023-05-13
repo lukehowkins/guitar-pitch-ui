@@ -78,13 +78,30 @@ export const INTERVALS = {
   '2 octaves': 24,
 };
 
-export const DURATIONS = [4, 2, 1, 8, 16];
-export const DURATION_LABELS = {
-  1: 'Semibreve',
-  2: 'Minim',
+export const BEATS = [4, 8, 16, 2, 1, 6, 12, 3, 1.5];
+
+export const BEATS_TO_DURATIONS_MAP = {
+  16: 1,
+  12: 2,
+  8: 2,
+  6: 4,
+  4: 4,
+  3: 8,
+  2: 8,
+  1.5: 16,
+  1: 16,
+};
+
+export const BEATS_LABEL = {
+  16: 'Semibreve',
+  12: 'Dotted minim',
+  8: 'Minim',
+  6: 'Dotted crotchet',
   4: 'Crotchet',
-  8: 'Quaver',
-  16: 'Semiquaver',
+  3: 'Dotted quaver',
+  2: 'Quaver',
+  1.5: 'Dotted semiquaver',
+  1: 'Semiquaver',
 };
 
 export const TIMESIGNATURES = ['4/4', '3/4', '2/4', '5/4', '6/8', '9/8', '12/8'];

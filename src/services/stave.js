@@ -30,7 +30,7 @@ const getStemDirection = (sortedChord1, sortedChord2) => {
 const setStemDirections = (staveNotes, staveSecondVoice) => {
   if (
     staveNotes.length === staveSecondVoice.length &&
-    staveNotes.every((note, index) => staveSecondVoice[index].duration === note.duration)
+    staveNotes.every((note, index) => staveSecondVoice[index].beats === note.beats)
   ) {
     for (let i = 0; i < staveNotes.length; i++) {
       const sortedChord1 = getSortedChord(staveNotes[i].keys);
@@ -94,15 +94,15 @@ export const generateStaveWithStaveNotes = (ref, staveNotes, key = 'C', timeSign
 
 export const generateStaveWithNotes = (ref, notes, key, timeSignature, secondVoice, secondVoiceColor) => {
   let currentAccidentals = [];
-  const duration = 4;
+  const beats = 4;
 
   const convertToStave = (note, color) => {
     if (typeof note === 'string') {
-      const staveNote = getStaveNote(note, duration, key, color, currentAccidentals);
+      const staveNote = getStaveNote(note, beats, key, color, currentAccidentals);
       currentAccidentals = getAccidentals(staveNote, key, currentAccidentals);
       return staveNote;
     }
-    const staveChord = getStaveChord(note, duration, key, color, currentAccidentals);
+    const staveChord = getStaveChord(note, beats, key, color, currentAccidentals);
     currentAccidentals = getAccidentals(staveChord, key, currentAccidentals);
     return staveChord;
   };
