@@ -77,3 +77,14 @@ export const INTERVALS = {
   M14: 23,
   '2 octaves': 24,
 };
+
+export const DURATIONS = [4, 2, 1, 8, 16];
+export const DURATION_LABELS = {
+  1: 'Semibreve',
+  2: 'Minim',
+  4: 'Crotchet',
+  8: 'Quaver',
+  16: 'Semiquaver',
+};
+
+export const TIMESIGNATURES = ['4/4', '3/4', '2/4', '5/4', '6/8', '9/8', '12/8'];

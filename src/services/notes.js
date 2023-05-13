@@ -72,7 +72,7 @@ export const areChordsSame = (chord1, chord2) => {
 const makeNote = ({ note, oct }) => `${note}/${oct}`;
 
 // lowest to highest note
-export const getSortedChord = (chord) => {
+export const getSortedChord = (chord = []) => {
   return chord
     .map(getNoteInfo)
     .sort((a, b) => {

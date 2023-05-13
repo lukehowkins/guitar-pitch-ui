@@ -40,16 +40,16 @@ const addModifier =
     }
   };
 
-export const getStaveNote = (pitch, keySignature = 'C', color = 'black', currentAccidentals = []) => {
-  const staveNote = new StaveNote({ keys: [pitch], duration: 4, auto_stem: true });
+export const getStaveNote = (pitch, duration = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
+  const staveNote = new StaveNote({ keys: [pitch], duration, auto_stem: true });
   staveNote.setStyle({ fillStyle: color, strokeStyle: color });
   addModifier(staveNote, keySignature, currentAccidentals)(pitch);
 
   return staveNote;
 };
 
-export const getStaveChord = (keys, keySignature = 'C', color = 'black', currentAccidentals = []) => {
-  const staveNote = new StaveNote({ keys, duration: 4, auto_stem: true });
+export const getStaveChord = (keys, duration = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
+  const staveNote = new StaveNote({ keys, duration, auto_stem: true });
   staveNote.setStyle({ fillStyle: color, strokeStyle: color });
   keys.forEach(addModifier(staveNote, keySignature, currentAccidentals));
 

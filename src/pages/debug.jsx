@@ -50,18 +50,18 @@ export default function Debug() {
       <h4>Stave notes can be passed in directly with different colour notes</h4>
       <SingleStave
         staveNotes={[
-          getStaveNote('C/4', 'C', 'blue'),
-          getStaveChord(['D/4', 'G/4', 'Bb/4']),
+          getStaveNote('C/4', 8, 'C', 'blue'),
+          getStaveChord(['D/4', 'G/4', 'Bb/4'], 8),
           getStaveChord(['E/5', 'Ab/5']),
           getStaveChord(['C/5', 'G/4', 'C/4']),
           getStaveChord(['C/5', 'G/4', 'C/4']),
         ]}
         secondVoice={[
-          getStaveNote('F#/4', 'C', 'red'),
-          getStaveChord(['F/4', 'G#/4', 'A/4'], 'C', 'red'),
-          getStaveChord(['E#/5', 'A/5'], 'C', 'blue'),
-          getStaveChord(['C/3', 'G/3', 'E/4'], 'C', 'orange'),
-          getStaveChord(['C/5', 'G/4', 'E/4'], 'C', 'orange'),
+          getStaveNote('F#/4', 8, 'C', 'red'),
+          getStaveChord(['F/4', 'G#/4', 'A/4'], 8, 'C', 'red'),
+          getStaveChord(['E#/5', 'A/5'], 4, 'C', 'blue'),
+          getStaveChord(['C/3', 'G/3', 'E/4'], 4, 'C', 'orange'),
+          getStaveChord(['C/5', 'G/4', 'E/4'], 4, 'C', 'orange'),
         ]}
       />
       <h4>
@@ -86,13 +86,12 @@ export default function Debug() {
       <SingleStave
         keySignature="Fm"
         staveNotes={[
-          getStaveChord(['Db/4', 'G#/4', 'Bb/4'], 'Fm'),
-          getStaveChord(['Eb/5', 'Ab/5'], 'Fm', 'orange'),
-          getStaveNote('G/4', 'Fm', 'red'),
-          getStaveNote('G/4', 'Fm', 'green', ['G#']),
+          getStaveChord(['Db/4', 'G#/4', 'Bb/4'], 2, 'Fm'),
+          getStaveChord(['Eb/5', 'Ab/5'], 2, 'Fm', 'orange'),
+          getStaveNote('G/4', 2, 'Fm', 'red'),
+          getStaveNote('G/4', 2, 'Fm', 'green', ['G#']),
         ]}
       />
-
       <h4>Guitar tabs</h4>
       <GuitarTab notes={['C/4', ['D/4', 'G/4', 'Bb/4'], ['F/5', 'Ab/5']]} />
       <GuitarTab tabNotes={[getTabNote('C/5'), getTabChord(['D/5', 'G/5', 'Bb/5']), getTabChord(['F/6', 'Ab/6'])]} />
@@ -105,13 +104,78 @@ export default function Debug() {
           ],
         ]}
       />
-
       <h4>Guitar fretboards</h4>
       <GuitarFretboard notes={getFretboardPositions(['E/3', 'E/4', 'E/5'])} />
       <GuitarFretboard notes={getFretboardPositions(['Eb/7'])} />
       <GuitarFretboard notes={getFretboardPositions(['F/3', 'C/4'])} />
       <GuitarFretboard notes={getFretboardPositions(['E/5', 'G/5', 'C/6'])} />
       <GuitarFretboard notes={getFretboardPositions(['G/5', 'D/6', 'A/6'])} />
+
+      <h3>Rhythm</h3>
+      <p>Doesn't force correct beats in time signature, but num_beats can causes to cut off</p>
+      <SingleStave
+        timeSignature="4/4"
+        staveNotes={[
+          getStaveNote('C/5', 1),
+          getStaveNote('C/5', 2),
+          getStaveNote('C/5', 4),
+          getStaveNote('C/5', 8),
+          getStaveNote('C/5', 16),
+        ]}
+      />
+
+      <SingleStave
+        timeSignature="6/8"
+        staveNotes={[
+          getStaveNote('C/5', 1),
+          getStaveNote('C/5', 2),
+          getStaveNote('C/5', 4),
+          getStaveNote('C/5', 8),
+          getStaveNote('C/5', 16),
+        ]}
+      />
+
+      <p>2 voices, stem direction based on first note comparison</p>
+      <SingleStave
+        timeSignature="4/4"
+        staveNotes={[getStaveNote('C/4', 4), getStaveNote('E/4', 4), getStaveNote('G/4', 2)]}
+        secondVoice={[getStaveNote('E/5', 2), getStaveNote('D/5', 4), getStaveNote('C/5', 4)]}
+      />
+
+      <SingleStave
+        timeSignature="4/4"
+        staveNotes={[getStaveChord(['C/4', 'G/3'], 2), getStaveNote('E/4', 4), getStaveNote('G/4', 4)]}
+        secondVoice={[
+          getStaveNote('E/5', 4, 'C', 'blue'),
+          getStaveNote('D/5', 8, 'C', 'blue'),
+          getStaveNote('C/5', 8, 'C', 'blue'),
+          getStaveNote('B/4', 8, 'C', 'blue'),
+          getStaveNote('C/4', 8, 'C', 'blue'),
+          getStaveChord(['C/4', 'C/5'], 4, 'C', 'blue'),
+        ]}
+      />
+
+      <p>force high notes and low notes stem direction</p>
+      <SingleStave
+        timeSignature="5/4"
+        staveNotes={[
+          getStaveNote('C/7', 8),
+          getStaveNote('C/6', 8),
+          getStaveNote('C/5', 8),
+          getStaveNote('C/4', 8),
+          getStaveNote('C/3', 8),
+          getStaveNote('C/5', 8),
+          getStaveNote('C/7', 4),
+          getStaveNote('C/3', 4),
+        ]}
+        secondVoice={[
+          getStaveNote('D/3', 4, 'C', 'blue'),
+          getStaveNote('D/5', 4, 'C', 'blue'),
+          getStaveNote('D/7', 4, 'C', 'blue'),
+          getStaveNote('D/7', 4, 'C', 'blue'),
+          getStaveNote('D/3', 4, 'C', 'blue'),
+        ]}
+      />
     </>
   );
 }

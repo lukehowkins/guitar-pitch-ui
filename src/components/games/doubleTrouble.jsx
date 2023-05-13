@@ -7,14 +7,16 @@ import GuitarFretboard from '../guitarFredboard';
 import GuitarTab from '../guitarTab';
 import SingleStave from '../singleStave';
 
+const duration = 4;
+
 export default function DoubleTrouble({ keySignature, note, interval, lowestFret, highestFret, answer, onDone }) {
   const { showGuitarFretboard, showTab } = useUserStore();
   const doubleStop = [note, getNoteAbove(note, interval)];
-  const staveDoubleStop = getStaveChord(doubleStop, keySignature);
+  const staveDoubleStop = getStaveChord(doubleStop, duration, keySignature);
   const isCorrect = areChordsSame(doubleStop, answer);
   const staveNotes = [
     staveDoubleStop,
-    answer && !isCorrect && getStaveChord(answer, keySignature, 'red', getAccidentals(staveDoubleStop)),
+    answer && !isCorrect && getStaveChord(answer, duration, keySignature, 'red', getAccidentals(staveDoubleStop)),
   ].filter(Boolean);
 
   return (

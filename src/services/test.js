@@ -1,49 +1,65 @@
-import { NOTATION_STATION, DOUBLE_TROUBLE, TRIAD_MASTER, INTERVAL_BOSS } from '../constants/games';
+import { NOTATION_STATION, DOUBLE_TROUBLE, TRIAD_MASTER, INTERVAL_BOSS, RHYTHM_RUMBLE } from '../constants/games';
 import { INTERVALS } from '../constants/theory';
-import { getRandomInterval, getRandomKey, getRandomNote, getRandomTriad } from './mock';
+import {
+  getRandomInterval,
+  getRandomKey,
+  getRandomNote,
+  getRandomRhythm,
+  getRandomTimeSignature,
+  getRandomTriad,
+} from './mock';
 import { getNoteAbove, getNoteBelow } from './notes';
 
 const GAME_SETUPS = {
-  [NOTATION_STATION]: (difficulty) => {
-    if (!difficulty) return {};
+  [NOTATION_STATION]: (game) => {
+    if (!game) return {};
     return {
-      keySignature: getRandomKey(difficulty.difficulty),
-      note: getRandomNote(difficulty.lowestStaveNote, difficulty.highestStaveNote),
+      keySignature: getRandomKey(game.difficulty),
+      note: getRandomNote(game.lowestStaveNote, game.highestStaveNote),
     };
   },
-  [DOUBLE_TROUBLE]: (difficulty) => {
-    if (!difficulty) return {};
-    const minInterval = difficulty > 6 ? 'm2' : 'm3';
-    const maxInterval = difficulty > 5 ? 'M6' : 'P5';
+  [DOUBLE_TROUBLE]: (game) => {
+    if (!game) return {};
+    const minInterval = game.difficulty > 6 ? 'm2' : 'M3';
+    const maxInterval = game.difficulty > 5 ? 'P8' : 'P5';
     return {
-      keySignature: getRandomKey(difficulty.difficulty),
+      keySignature: getRandomKey(game.difficulty),
       note: getRandomNote(
-        getNoteAbove(difficulty.lowestStaveNote, maxInterval),
-        getNoteBelow(difficulty.highestStaveNote, maxInterval)
+        getNoteAbove(game.lowestStaveNote, maxInterval),
+        getNoteBelow(game.highestStaveNote, maxInterval)
       ),
       interval: getRandomInterval(minInterval, maxInterval),
       isAbove: Math.random() > 0.5,
     };
   },
-  [TRIAD_MASTER]: (difficulty) => {
-    if (!difficulty) return {};
+  [TRIAD_MASTER]: (game) => {
+    if (!game) return {};
     return {
-      keySignature: getRandomKey(difficulty.difficulty),
-      triad: getRandomTriad(difficulty.lowestStaveNote, difficulty.highestStaveNote),
+      keySignature: getRandomKey(game.difficulty),
+      triad: getRandomTriad(game.lowestStaveNote, game.highestStaveNote),
     };
   },
-  [INTERVAL_BOSS]: (difficulty) => {
-    if (!difficulty) return {};
+  [INTERVAL_BOSS]: (game) => {
+    if (!game) return {};
     const minInterval = 'm2';
-    const [maxInterval] = Object.entries(INTERVALS).find(([, val]) => val === 4 + difficulty.difficulty * 2);
+    const [maxInterval] = Object.entries(INTERVALS).find(([, val]) => val === 4 + game.difficulty * 2);
     return {
-      keySignature: getRandomKey(difficulty.difficulty),
+      keySignature: getRandomKey(game.difficulty),
       note: getRandomNote(
-        getNoteAbove(difficulty.lowestStaveNote, minInterval),
-        getNoteBelow(difficulty.highestStaveNote, maxInterval)
+        getNoteAbove(game.lowestStaveNote, minInterval),
+        getNoteBelow(game.highestStaveNote, maxInterval)
       ),
       interval: getRandomInterval(minInterval, maxInterval),
       isAbove: Math.random() > 0.5,
+    };
+  },
+  [RHYTHM_RUMBLE]: ({ difficulty } = {}) => {
+    if (difficulty === undefined || difficulty === null) return {};
+    const timeSignature = getRandomTimeSignature(difficulty);
+
+    return {
+      rhythm: getRandomRhythm(timeSignature, difficulty),
+      timeSignature,
     };
   },
 };

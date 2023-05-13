@@ -7,13 +7,15 @@ import GuitarFretboard from '../guitarFredboard';
 import GuitarTab from '../guitarTab';
 import SingleStave from '../singleStave';
 
+const duration = 4;
+
 export default function TriadMaster({ keySignature, triad, lowestFret, highestFret, answer, onDone }) {
   const { showGuitarFretboard, showTab } = useUserStore();
-  const staveChord = getStaveChord(triad, keySignature);
+  const staveChord = getStaveChord(triad, duration, keySignature);
   const isCorrect = areChordsSame(triad, answer);
   const staveNotes = [
     staveChord,
-    answer && !isCorrect && getStaveChord(answer, keySignature, 'red', getAccidentals(staveChord)),
+    answer && !isCorrect && getStaveChord(answer, duration, keySignature, 'red', getAccidentals(staveChord)),
   ].filter(Boolean);
 
   return (

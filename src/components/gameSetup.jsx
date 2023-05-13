@@ -1,6 +1,6 @@
 import './gameSetup.scss';
 import React, { useState } from 'react';
-import { GAME_LABELS } from '../constants/games';
+import { GAME_LABELS, RHYTHM_RUMBLE } from '../constants/games';
 import { useGameStore } from '../store/game';
 
 export default function GameSetup() {
@@ -42,6 +42,13 @@ export default function GameSetup() {
 
   return (
     <form onSubmit={handleSubmit} className="game-setup">
+      <label>Game:</label>
+      {Object.entries(GAME_LABELS).map(([name, label]) => (
+        <label key={name}>
+          <input type="radio" name="game" value={name} onChange={handleChange} checked={formData.game === name} />
+          {label}
+        </label>
+      ))}
       <label>
         Total questions:
         <input type="number" min={0} max={50} name="total" value={formData.total} onChange={handleNumberChange} />
@@ -57,36 +64,33 @@ export default function GameSetup() {
           onChange={handleNumberChange}
         />
       </label>
-      <label>
-        Lowest fret
-        <input
-          type="number"
-          min={0}
-          max={20}
-          name="lowestFret"
-          value={formData.lowestFret}
-          onChange={handleNumberChange}
-        />
-      </label>
-      <label>
-        Highest fret
-        <input
-          type="number"
-          min={(formData.lowestFret || 0) + 4}
-          max={24}
-          name="highestFret"
-          value={formData.highestFret}
-          onChange={handleNumberChange}
-        />
-      </label>
+      {formData.game !== RHYTHM_RUMBLE && (
+        <>
+          <label>
+            Lowest fret
+            <input
+              type="number"
+              min={0}
+              max={20}
+              name="lowestFret"
+              value={formData.lowestFret}
+              onChange={handleNumberChange}
+            />
+          </label>
+          <label>
+            Highest fret
+            <input
+              type="number"
+              min={(formData.lowestFret || 0) + 4}
+              max={24}
+              name="highestFret"
+              value={formData.highestFret}
+              onChange={handleNumberChange}
+            />
+          </label>
+        </>
+      )}
 
-      <label>Game:</label>
-      {Object.entries(GAME_LABELS).map(([name, label]) => (
-        <label key={name}>
-          <input type="radio" name="game" value={name} onChange={handleChange} checked={formData.game === name} />
-          {label}
-        </label>
-      ))}
       <button>submit</button>
     </form>
   );
