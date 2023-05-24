@@ -2,8 +2,8 @@ import { Renderer, TabNote, TabStave, TickContext } from 'vexflow';
 import { getTabChord, getTabNote } from './tabNote';
 
 const MIN_WIDTH = 250;
-const MIN_WIDTH_PER_NOTE = 40;
-const TAB_CLEF_WIDTH = 20;
+const MIN_WIDTH_PER_NOTE = 80;
+const TAB_CLEF_WIDTH = 50;
 const HEIGHT = 90;
 
 function showNote(tabNote, stave, ctx, x) {
