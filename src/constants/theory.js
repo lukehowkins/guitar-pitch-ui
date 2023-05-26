@@ -78,7 +78,8 @@ export const INTERVALS = {
   '2 octaves': 24,
 };
 
-export const BEATS = [4, 8, 16, 2, 1, 6, 12, 3, 1.5];
+export const WHOLE_BEATS = [4, 8, 16, 2, 1, 6, 12, 3];
+export const ALL_BEATS = [4, 8, 16, 2, 1, 6, 12, 3, 5, 9, 10, 13, 14, 7, 11, 15];
 
 export const BEATS_TO_DURATIONS_MAP = {
   16: 1,
@@ -88,11 +89,16 @@ export const BEATS_TO_DURATIONS_MAP = {
   4: 4,
   3: 8,
   2: 8,
-  1.5: 16,
   1: 16,
 };
 
-export const BEATS_LABEL = {
+export const DURATION_TO_BEATS_MAP = {
+  8: 2,
+  4: 4,
+  2: 8,
+};
+
+export const DURATION_LABELS = {
   16: 'Semibreve',
   12: 'Dotted minim',
   8: 'Minim',
@@ -100,7 +106,6 @@ export const BEATS_LABEL = {
   4: 'Crotchet',
   3: 'Dotted quaver',
   2: 'Quaver',
-  1.5: 'Dotted semiquaver',
   1: 'Semiquaver',
 };
 

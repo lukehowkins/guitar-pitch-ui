@@ -1,5 +1,5 @@
-import { Accidental, StaveNote, Dot } from 'vexflow';
-import { BEATS_TO_DURATIONS_MAP, BEATS_LABEL, BEATS, KEYS } from '../constants/theory';
+import { Accidental, StaveNote, StaveTie, Dot } from 'vexflow';
+import { BEATS_TO_DURATIONS_MAP, DURATION_LABELS, WHOLE_BEATS, KEYS } from '../constants/theory';
 import { ERROR_INVALID_BEATS, ERROR_INVALID_KEY } from '../constants/errors';
 import { getNoteInfo } from './notes';
 
@@ -41,23 +41,25 @@ const addModifier =
   };
 
 export const getStaveNote = (pitch, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
-  if (!BEATS.includes(+beats)) throw ERROR_INVALID_BEATS;
-  const staveNote = new StaveNote({ keys: [pitch], duration: BEATS_TO_DURATIONS_MAP[beats], auto_stem: true });
+  const absBeats = Math.abs(beats);
+  if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;
+  const staveNote = new StaveNote({ keys: [pitch], duration: BEATS_TO_DURATIONS_MAP[absBeats], auto_stem: true });
   staveNote.setStyle({ fillStyle: color, strokeStyle: color });
   addModifier(staveNote, keySignature, currentAccidentals)(pitch);
   // TODO shouldn't be based on a label
-  if (BEATS_LABEL[beats].includes('Dotted')) Dot.buildAndAttach([staveNote]);
+  if (DURATION_LABELS[absBeats].includes('Dotted')) Dot.buildAndAttach([staveNote]);
 
   return staveNote;
 };
 
 export const getStaveChord = (keys, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
-  if (!BEATS.includes(+beats)) throw ERROR_INVALID_BEATS;
-  const staveChord = new StaveNote({ keys, duration: BEATS_TO_DURATIONS_MAP[beats], auto_stem: true });
+  const absBeats = Math.abs(beats);
+  if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;
+  const staveChord = new StaveNote({ keys, duration: BEATS_TO_DURATIONS_MAP[absBeats], auto_stem: true });
   staveChord.setStyle({ fillStyle: color, strokeStyle: color });
   keys.forEach(addModifier(staveChord, keySignature, currentAccidentals));
   // TODO shouldn't be based on a label
-  if (BEATS_LABEL[beats].includes('Dotted')) Dot.buildAndAttach([staveChord], { all: true });
+  if (DURATION_LABELS[absBeats].includes('Dotted')) Dot.buildAndAttach([staveChord], { all: true });
 
   return staveChord;
 };
@@ -84,4 +86,14 @@ export const getAccidentals = (staveChord, keySignature = 'C', previousAccidenta
   );
 
   return [...filteredAccidentals, ...newAccidentals];
+};
+
+export const getStaveTie = (firstNote, lastNote) => {
+  const indices = firstNote.keys.map((_, i) => i);
+  return new StaveTie({
+    first_note: firstNote,
+    last_note: lastNote,
+    first_indices: indices,
+    last_indices: indices,
+  });
 };

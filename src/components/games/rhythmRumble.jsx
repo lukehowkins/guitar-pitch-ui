@@ -1,14 +1,38 @@
 import React from 'react';
 import SingleStave from '../singleStave';
-import { getStaveNote } from '../../services/staveNotes';
-import { BEATS_LABEL } from '../../constants/theory';
+import { getStaveNote, getStaveTie } from '../../services/staveNotes';
+import { getDurationLabel, groupRhythmPerBeat } from '../../services/rhythm';
 
-// TODO answer should always be array
-export default function RhythmRumble({ timeSignature, rhythm, preferredNote = 'E/4', answer, onDone }) {
+const RHYTHM_NOTE = 'D/4';
+const ANSWER_NOTE = 'G/5';
+
+const getTies = (groupedBeats, staveNotes) => {
+  if (!groupedBeats?.length || !staveNotes?.length) return [];
+  const staveNotesFlat = staveNotes.flat();
+
+  return groupedBeats
+    .flat()
+    .map((beat, index) => {
+      if (beat < 0) return getStaveTie(staveNotesFlat[index - 1], staveNotesFlat[index]);
+    })
+    .filter(Boolean);
+};
+
+export default function RhythmRumble({ timeSignature, rhythm, answer, onDone }) {
   const isCorrect = rhythm?.length === answer?.length && rhythm.every((beats, index) => beats == answer[index]);
 
-  const staveNotes = rhythm.map((beats) => getStaveNote(preferredNote, beats));
-  const staveAnswer = answer?.map((beats) => getStaveNote(preferredNote, beats, 'C', 'red'));
+  const groupedRhythmBeats = groupRhythmPerBeat(rhythm, timeSignature);
+  const groupedRhythmBeatsFlat = groupedRhythmBeats.flat();
+  const groupedAnswerBeats = groupRhythmPerBeat(answer, timeSignature);
+
+  // TODO 8, don't tie 4 to 4
+  const staveNotes = groupedRhythmBeats.map((group) => group.map((beats) => getStaveNote(RHYTHM_NOTE, beats)));
+  const staveAnswer = groupedAnswerBeats?.map((group) =>
+    group.map((beats) => getStaveNote(ANSWER_NOTE, beats, 'C', 'red'))
+  );
+
+  const ties = getTies(groupedRhythmBeats, staveNotes);
+  const tiesAnswer = isCorrect ? [] : getTies(groupedAnswerBeats, staveAnswer);
 
   return (
     <div>
@@ -18,12 +42,16 @@ export default function RhythmRumble({ timeSignature, rhythm, preferredNote = 'E
         staveNotes={staveNotes}
         secondVoice={!isCorrect && staveAnswer}
         secondVoiceColor="red"
+        ties={[...ties, ...tiesAnswer]}
       />
       {answer && (
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
-          <p>{rhythm.join(' ')}</p>
-          <p>{rhythm.map((beats) => BEATS_LABEL[beats]).join(' ')}</p>
+          <p>Beats: {rhythm.join(' ')}</p>
+          <p>
+            Note names:
+            {groupedRhythmBeatsFlat.map(getDurationLabel).join(' ')}
+          </p>
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

@@ -1,6 +1,7 @@
 import { ERROR_TOO_MANY_BEATS } from '../constants/errors';
-import { NOTES, KEYS, INTERVALS, TIMESIGNATURES, BEATS } from '../constants/theory';
+import { NOTES, KEYS, INTERVALS, TIMESIGNATURES, ALL_BEATS } from '../constants/theory';
 import { getNoteAbove, getNoteBelow, getNoteInfo, getSortedChord, getStepDiff } from './notes';
+import { getTotalBeats } from './rhythm';
 
 const getRandomNumber = (n) => Math.floor(Math.random() * n);
 
@@ -77,7 +78,7 @@ const rhythmHelper = (totalBeats, supportedBeats, rhythm = []) => {
   const beatsLeft = totalBeats - currentDuration;
   const supportedPossibleBeats = supportedBeats.filter((beats) => beats <= beatsLeft);
   if (!supportedPossibleBeats.length) return rhythmHelper(totalBeats, supportedBeats);
-  if (supportedPossibleBeats.includes(beatsLeft) && getRandomNumber(2) > 1) return [...rhythm, beatsLeft];
+  if (supportedPossibleBeats.includes(beatsLeft) && getRandomNumber(10) > 8) return [...rhythm, beatsLeft];
   const nextDuration = getRandomEl(supportedPossibleBeats);
   if (nextDuration + currentDuration > totalBeats) return rhythmHelper(totalBeats, supportedPossibleBeats, rhythm);
   const newRhythm = [...rhythm, nextDuration];
@@ -85,9 +86,8 @@ const rhythmHelper = (totalBeats, supportedBeats, rhythm = []) => {
 };
 
 export const getRandomRhythm = (timeSignature, difficulty) => {
-  const [numerator, denominator] = timeSignature.split('/');
-  const beats = BEATS.slice(0, 2 + difficulty);
-  const totalBeats = (16 * numerator) / denominator;
+  const totalBeats = getTotalBeats(timeSignature);
+  const beats = ALL_BEATS.slice(0, Math.floor(2 + (difficulty * 10) / ALL_BEATS.length));
 
   return rhythmHelper(totalBeats, beats);
 };

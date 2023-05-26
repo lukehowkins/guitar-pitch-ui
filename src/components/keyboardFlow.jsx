@@ -7,6 +7,13 @@ const convertToNotes = (s) => {
   return s;
 };
 
+const convertToBeats = (s) => {
+  const split = s.split(',').map((beat) => beat.trim());
+  if (split.every((beat) => Number.isInteger(+beat))) {
+    return split.map((beat) => +beat);
+  }
+};
+
 export default function KeyboardFlow() {
   const input = useRef();
   const [notes, setNotes] = useState('');
@@ -21,7 +28,7 @@ export default function KeyboardFlow() {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      setAnswer(convertToNotes(notes));
+      setAnswer(convertToBeats(notes) || convertToNotes(notes));
     },
     [notes]
   );

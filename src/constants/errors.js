@@ -7,6 +7,7 @@ export const ERROR_TOO_FEW_BEATS = new Error('Not enough beats');
 
 export const ERROR_INVALID_NOTE = new Error('Invalid note');
 export const ERROR_INVALID_BEATS = new Error('Invalid beats');
+export const ERROR_INVALID_DURATION = new Error('Invalid duration');
 export const ERROR_INVALID_FRET = new Error('Invalid fret');
 export const ERROR_INVALID_KEY = new Error('Invalid key');
 export const ERROR_INVALID_INTERVAL = new Error('Invalid interval');

@@ -1,7 +1,8 @@
-import { Formatter, Renderer, Stave, Stem, Voice, VoiceMode } from 'vexflow';
+import { Formatter, Renderer, Stave, Beam, Stem, Voice, VoiceMode } from 'vexflow';
 import { KEYS } from '../constants/theory';
 import { getAccidentals, getStaveChord, getStaveNote } from './staveNotes';
 import { getSortedChord, getStepDiff } from './notes';
+import { areChordsSame } from './notes';
 
 const MIN_WIDTH = 500;
 const MIN_WIDTH_PER_NOTE = 40;
@@ -56,14 +57,47 @@ const setStemDirections = (staveNotes, staveSecondVoice) => {
   }
 };
 
-export const generateStaveWithStaveNotes = (ref, staveNotes, key = 'C', timeSignature = '4/4', staveSecondVoice) => {
+const getBeamNotes = (staveNotesGrouped) => {
+  if (!staveNotesGrouped?.length) return [];
+
+  return staveNotesGrouped
+    .map((staveNotes) => {
+      if (staveNotes.length > 1 && staveNotes.every((staveNote) => +staveNote.duration >= 8)) {
+        // if all same notes, then preserve stem direction. For rhythm rumble
+        const allSameNotes = staveNotes.every((staveNote) => areChordsSame(staveNote.keys, staveNotes[0].keys));
+        const config = allSameNotes ? undefined : { auto_stem: true, maintain_stem_directions: false };
+        const beam = new Beam(staveNotes, config);
+        beam.setStyle(staveNotes[0].style);
+        return beam;
+      }
+    })
+    .filter(Boolean);
+};
+
+/**
+ * staveNotesGrouped is either
+ * an array of arrays, representing a list of beamed notes
+ * an array, representing a list of notes
+ */
+export const generateStaveWithStaveNotes = (
+  ref,
+  staveNotesGrouped,
+  key = 'C',
+  timeSignature = '4/4',
+  staveSecondVoiceGrouped,
+  ties
+) => {
   ref.innerHTML = '';
+
+  const staveNotes = staveNotesGrouped.flat();
+  const staveSecondVoice = staveSecondVoiceGrouped?.length && staveSecondVoiceGrouped.flat();
   const keySignatureWidth = KEYS[key].length * 20;
   const minWidthPerNote = staveSecondVoice ? 2 * MIN_WIDTH_PER_NOTE : MIN_WIDTH_PER_NOTE;
-  const width = Math.max(
-    Math.min(MIN_WIDTH, ref.clientWidth),
-    Math.max(staveNotes.length, staveSecondVoice?.length || 0) * minWidthPerNote + TREBEL_CLEF_WIDTH + keySignatureWidth
-  );
+  const calcWidth =
+    Math.max(staveNotes.length, staveSecondVoice?.length || 0) * minWidthPerNote +
+    TREBEL_CLEF_WIDTH +
+    keySignatureWidth;
+  const width = Math.max(MIN_WIDTH, Math.min(ref.clientWidth, calcWidth));
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
   renderer.resize(width, HEIGHT);
   const context = renderer.getContext();
@@ -85,10 +119,22 @@ export const generateStaveWithStaveNotes = (ref, staveNotes, key = 'C', timeSign
     voice2.addTickables(staveSecondVoice);
 
     const voices = [voice1, voice2];
+    const beams = getBeamNotes(staveNotesGrouped);
+    const beams2 = getBeamNotes(staveSecondVoiceGrouped);
     new Formatter().joinVoices(voices).format(voices, width);
     voices.forEach((voice) => voice.draw(context, stave));
+    [...beams, ...beams2].forEach((b) => b.setContext(context).draw());
   } else {
+    const beams = getBeamNotes(staveNotesGrouped);
     Formatter.FormatAndDraw(context, stave, staveNotes);
+    beams.forEach((b) => b.setContext(context).draw());
+  }
+
+  if (ties?.length) {
+    ties.forEach((t) => {
+      t.setStyle(t.notes.first_note.style);
+      t.setContext(context).draw();
+    });
   }
 };
 

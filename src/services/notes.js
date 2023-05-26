@@ -26,7 +26,8 @@ const getNoteIndex = (noteInfo) =>
   NOTES.findIndex((note) => noteInfo.note === note || EQUIVALENT_NOTES[noteInfo.note] === note);
 
 export const getNoteInfo = (key) => {
-  const [note, oct] = key?.split('/') || [];
+  if (!key) throw ERROR_INVALID_NOTE;
+  const [note, oct] = key.split('/');
   if (!note || !oct) throw ERROR_INVALID_NOTE;
   if (oct < 1) throw ERROR_TOO_LOW;
   if (oct > 7) throw ERROR_TOO_HIGH;
