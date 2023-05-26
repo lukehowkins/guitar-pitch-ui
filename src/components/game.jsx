@@ -7,11 +7,17 @@ import Loading from './loading';
 import Metronome from './metronome';
 
 function Game({ answer, onNext }) {
-  const { Component, total, label, reset: clearGame, ...game } = useGameStore();
+  const { Component, total, label, reset, ...game } = useGameStore();
   const [isLoading, setIsLoading] = useState(true);
   const [turnCount, setTurnCount] = useState(1);
   const [score, setScore] = useState(0);
   const [gameSetup, setGameSetup] = useState({});
+
+  const clearGame = () => {
+    reset();
+    setScore(0);
+    setTurnCount(1);
+  };
 
   const handleNext = (isCorrect) => {
     setTurnCount(turnCount + 1);
