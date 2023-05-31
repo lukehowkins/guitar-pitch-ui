@@ -1,7 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { getStaveNote, getStaveChord, getAccidentals } from './staveNotes';
+import { getStaveNote, getStaveChord, getAccidentals, getStaveRest, isStaveRest } from './staveNotes';
 
 describe('notes', () => {
+  describe('getStaveRest', () => {
+    it('should return rest', () => {
+      let rest = getStaveRest();
+      expect(rest.duration).toEqual('4');
+      expect(rest.modifiers).toHaveLength(0);
+      expect(rest.keys).toEqual(['B/4']);
+      expect(isStaveRest(rest)).toBe(true);
+
+      rest = getStaveRest(12, 'red', 'E/3');
+      expect(rest.duration).toEqual('2');
+      expect(rest.modifiers).toHaveLength(1);
+      expect(rest.modifiers[0].attrs.type).toEqual('Dot');
+      expect(rest.keys).toEqual(['E/3']);
+    });
+  });
+
   describe('getStaveNote', () => {
     it('should throw error', () => {
       expect(() => getStaveNote()).toThrow();
@@ -10,11 +26,13 @@ describe('notes', () => {
       expect(() => getStaveNote('C4')).toThrow();
       expect(() => getStaveNote('C/4', 7)).toThrow();
     });
+
     it('should return note with no accidentals', () => {
       const note = getStaveNote('C/4');
       expect(note.duration).toEqual('4');
       expect(note.modifiers).toHaveLength(0);
       expect(note.keys).toEqual(['C/4']);
+      expect(isStaveRest(note)).toBe(false);
 
       const note2 = getStaveNote('Bb/4', 8, 'Dm');
       expect(note2.duration).toEqual('2');
@@ -26,16 +44,15 @@ describe('notes', () => {
       expect(note3.modifiers).toHaveLength(0);
       expect(note3.keys).toEqual(['F#/4']);
 
-      const note4 = getStaveNote('F/4', 2, 'D', 'black', ['Fn']);
+      const note4 = getStaveNote('F/4', '2', 'D', 'black', ['Fn']);
       expect(note4.duration).toEqual('8');
       expect(note4.modifiers).toHaveLength(0);
       expect(note4.keys).toEqual(['F/4']);
 
-      // tied note
-      const note5 = getStaveNote('F/4', -2);
-      expect(note5.duration).toEqual('8');
-      expect(note5.modifiers).toHaveLength(0);
-      expect(note5.keys).toEqual(['F/4']);
+      const tiedNote = getStaveNote('F/4', -2);
+      expect(tiedNote.duration).toEqual('8');
+      expect(tiedNote.modifiers).toHaveLength(0);
+      expect(tiedNote.keys).toEqual(['F/4']);
     });
 
     it('should return note with accidentals', () => {
@@ -43,6 +60,7 @@ describe('notes', () => {
       expect(note.duration).toEqual('4');
       expect(note.modifiers[0].accidental.code).toEqual('accidentalSharp');
       expect(note.keys).toEqual(['C#/4']);
+      expect(isStaveRest(note)).toBe(false);
 
       const note2 = getStaveNote('B/4', 4, 'Dm');
       expect(note2.duration).toEqual('4');
@@ -76,6 +94,7 @@ describe('notes', () => {
       expect(note.modifiers).toHaveLength(1);
       expect(note.modifiers[0].attrs.type).toEqual('Dot');
       expect(note.keys).toEqual(['F/4']);
+      expect(isStaveRest(note)).toBe(false);
 
       const note2 = getStaveNote('F/4', 12);
       expect(note2.duration).toEqual('2');
@@ -99,6 +118,7 @@ describe('notes', () => {
       expect(chord.duration).toEqual('4');
       expect(chord.modifiers).toHaveLength(0);
       expect(chord.keys).toEqual(['C/4', 'E/4', 'G/4']);
+      expect(isStaveRest(chord)).toBe(false);
 
       const chord2 = getStaveChord(['Bb/4', 'D/5'], 8, 'Dm');
       expect(chord2.duration).toEqual('2');
@@ -120,11 +140,10 @@ describe('notes', () => {
       expect(chord7.modifiers).toHaveLength(0);
       expect(chord7.keys).toEqual(['D#/5', 'F#/5']);
 
-      // tied chord
-      const chord8 = getStaveChord(['F/4', 'G/6'], -2);
-      expect(chord8.duration).toEqual('8');
-      expect(chord8.modifiers).toHaveLength(0);
-      expect(chord8.keys).toEqual(['F/4', 'G/6']);
+      const tiedChord = getStaveChord(['F/4', 'G/6'], -2);
+      expect(tiedChord.duration).toEqual('8');
+      expect(tiedChord.modifiers).toHaveLength(0);
+      expect(tiedChord.keys).toEqual(['F/4', 'G/6']);
     });
 
     it('should return chord with accidentals', () => {
@@ -135,6 +154,7 @@ describe('notes', () => {
       expect(chord.modifiers[1].accidental.code).toEqual('accidentalSharp');
       expect(chord.modifiers[2].accidental.code).toEqual('accidentalSharp');
       expect(chord.keys).toEqual(['C#/4', 'E#/5', 'G#/5']);
+      expect(isStaveRest(chord)).toBe(false);
 
       const chord2 = getStaveChord(['B/4', 'D/5'], 4, 'Dm');
       expect(chord2.duration).toEqual('4');
@@ -185,6 +205,7 @@ describe('notes', () => {
       expect(chord.modifiers[0].attrs.type).toEqual('Dot');
       expect(chord.modifiers[1].attrs.type).toEqual('Dot');
       expect(chord.keys).toEqual(['F/4', 'A/4']);
+      expect(isStaveRest(chord)).toBe(false);
 
       const chord2 = getStaveChord(['F/4', 'A/4'], 12);
       expect(chord2.duration).toEqual('2');

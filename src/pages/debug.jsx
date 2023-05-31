@@ -5,7 +5,7 @@ import GuitarTab from '../components/guitarTab';
 import ImportXML from '../components/importXML';
 import SingleStave from '../components/singleStave';
 import { getFretboardPositions } from '../services/guitar';
-import { getStaveChord, getStaveNote } from '../services/staveNotes';
+import { getStaveChord, getStaveNote, getStaveRest } from '../services/staveNotes';
 import { getTabChord, getTabNote } from '../services/tabNote';
 import Metronome from '../components/metronome';
 import RhythmRumble from '../components/games/rhythmRumble';
@@ -122,7 +122,7 @@ export default function Debug() {
         highestFret={19}
         answer={['D/4', 'E/4']}
       />
-      <RhythmRumble timeSignature="5/4" rhythm={[4, 2, 3, 5, 1, 1, 4]} answer={[4, 2, 2, 4, 1, 1, 6]} />
+      <RhythmRumble timeSignature="5/4" rhythm={[4, 2, '3', 5, 1, 1, 4]} answer={[4, '2', 2, 4, 1, 1, 6]} />
 
       <h4>Accidentals</h4>
       <SingleStave
@@ -231,9 +231,9 @@ export default function Debug() {
         staveNotes={[
           getStaveNote('C/5', 1),
           getStaveNote('C/5', 2),
-          getStaveNote('C/5', 3),
+          getStaveNote('C/5', 3, 'C', 'blue'),
           getStaveNote('C/5', 4),
-          getStaveNote('C/5', 6),
+          getStaveNote('C/5', 6, 'C', 'blue'),
           getStaveNote('C/5', 8),
           getStaveNote('C/5', 12),
           getStaveNote('C/5', 16),
@@ -244,13 +244,27 @@ export default function Debug() {
         timeSignature="6/8"
         staveNotes={[
           getStaveNote('C/5', 1),
-          getStaveNote('C/5', 2),
+          getStaveNote('C/5', 2, 'C', 'blue'),
           getStaveNote('C/5', 3),
           getStaveNote('C/5', 4),
-          getStaveNote('C/5', 6),
+          getStaveNote('C/5', 6, 'C', 'blue'),
           getStaveNote('C/5', 8),
           getStaveNote('C/5', 12),
           getStaveNote('C/5', 16),
+        ]}
+      />
+
+      <p>Rests</p>
+      <SingleStave
+        staveNotes={[
+          getStaveRest(1),
+          getStaveRest(2),
+          getStaveRest(3, 'blue'),
+          getStaveRest(4),
+          getStaveRest(6, 'orange', 'D/5'),
+          getStaveRest(8),
+          getStaveRest(12, 'red'),
+          getStaveRest(16),
         ]}
       />
 
@@ -286,7 +300,7 @@ export default function Debug() {
         secondVoice={[
           getStaveNote('E/5', 4, 'C', 'blue'),
           getStaveNote('D/5', 2, 'C', 'blue'),
-          getStaveNote('C/5', 2, 'C', 'blue'),
+          getStaveRest(2, 'blue', 'F/5'),
           getStaveNote('B/4', 2, 'C', 'blue'),
           getStaveNote('C/4', 2, 'C', 'blue'),
           getStaveChord(['C/4', 'C/5'], 6, 'C', 'blue'),
@@ -323,7 +337,7 @@ export default function Debug() {
           [getStaveNote('F#/5', 2, 'D'), getStaveNote('D/5', 1), getStaveNote('E/5', 1)],
           [getStaveNote('F#/5', 1, 'D'), getStaveNote('D/5', 2), getStaveNote('G/5', 1)],
           [getStaveNote('D/4', 1), getStaveNote('E/4', 1), getStaveNote('F#/4', 2, 'D')],
-          [getStaveNote('G/4', 1), getStaveNote('A/4', 1), getStaveNote('B/4', 1), getStaveNote('C#/5', 1, 'D')],
+          [getStaveNote('G/4', 1), getStaveRest(1), getStaveNote('B/4', 1), getStaveNote('C#/5', 1, 'D')],
           [getStaveNote('C#/5', 1, 'D'), getStaveNote('B/4', 1), getStaveNote('A/4', 1), getStaveNote('B/3', 1)],
         ]}
       />

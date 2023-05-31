@@ -40,6 +40,19 @@ const addModifier =
     }
   };
 
+export const isStaveRest = (staveNote) => staveNote.noteType === 'r';
+
+export const getStaveRest = (beats = 4, color = 'black', key = 'B/4') => {
+  const duration = BEATS_TO_DURATIONS_MAP[beats];
+  if (!duration) throw ERROR_INVALID_BEATS;
+  const staveRest = new StaveNote({ keys: [key], duration: `${duration}r` });
+  staveRest.setStyle({ fillStyle: color, strokeStyle: color });
+  // TODO shouldn't be based on a label
+  if (DURATION_LABELS[beats].includes('Dotted')) Dot.buildAndAttach([staveRest]);
+
+  return staveRest;
+};
+
 export const getStaveNote = (pitch, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
   const absBeats = Math.abs(beats);
   if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;
@@ -82,7 +95,7 @@ export const getAccidentals = (staveChord, keySignature = 'C', previousAccidenta
     .filter(Boolean);
 
   const filteredAccidentals = previousAccidentals.filter(
-    ([letter]) => !newAccidentals.find(([newLetter]) => newLetter === letter)
+    ([letter]) => !newAccidentals.find(([newLetter]) => newLetter === letter),
   );
 
   return [...filteredAccidentals, ...newAccidentals];
