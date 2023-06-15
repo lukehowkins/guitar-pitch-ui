@@ -1,6 +1,6 @@
 import { Formatter, Renderer, Stave, Beam, Stem, Voice, VoiceMode } from 'vexflow';
 import { KEYS } from '../constants/theory';
-import { getAccidentals, getStaveChord, getStaveNote } from './staveNotes';
+import { getAccidentals, getStaveChord, getStaveNote, isStaveRest } from './staveNotes';
 import { getSortedChord, getStepDiff } from './notes';
 import { areChordsSame } from './notes';
 
@@ -61,7 +61,9 @@ const getBeamNotes = (staveNotesGrouped) => {
   if (!staveNotesGrouped?.length) return [];
 
   return staveNotesGrouped
-    .map((staveNotes) => {
+    .map((staveNotesOrRests) => {
+      if (!Array.isArray(staveNotesOrRests)) return;
+      const staveNotes = staveNotesOrRests.filter((staveNote) => !isStaveRest(staveNote));
       if (staveNotes.length > 1 && staveNotes.every((staveNote) => +staveNote.duration >= 8)) {
         // if all same notes, then preserve stem direction. For rhythm rumble
         const allSameNotes = staveNotes.every((staveNote) => areChordsSame(staveNote.keys, staveNotes[0].keys));
@@ -85,7 +87,7 @@ export const generateStaveWithStaveNotes = (
   key = 'C',
   timeSignature = '4/4',
   staveSecondVoiceGrouped,
-  ties
+  ties,
 ) => {
   ref.innerHTML = '';
 

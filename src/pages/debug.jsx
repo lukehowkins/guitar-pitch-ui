@@ -122,7 +122,7 @@ export default function Debug() {
         highestFret={19}
         answer={['D/4', 'E/4']}
       />
-      <RhythmRumble timeSignature="5/4" rhythm={[4, 2, '3', 5, 1, 1, 4]} answer={[4, '2', 2, 4, 1, 1, 6]} />
+      <RhythmRumble timeSignature="5/4" rhythm={[4, 2, '3r', 5, 1, 1, 4]} answer={[4, '2r', 2, 4, 1, 1, 6]} />
 
       <h4>Accidentals</h4>
       <SingleStave

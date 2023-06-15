@@ -28,7 +28,7 @@ export default function RhythmRumble({ timeSignature, rhythm, answer, onDone }) 
   // TODO 8, don't tie 4 to 4
   const staveNotes = groupedRhythmBeats.map((group) => group.map((beats) => getStaveNote(RHYTHM_NOTE, beats)));
   const staveAnswer = groupedAnswerBeats?.map((group) =>
-    group.map((beats) => getStaveNote(ANSWER_NOTE, beats, 'C', 'red'))
+    group.map((beats) => getStaveNote(ANSWER_NOTE, beats, 'C', 'red')),
   );
 
   const ties = getTies(groupedRhythmBeats, staveNotes);
@@ -47,11 +47,18 @@ export default function RhythmRumble({ timeSignature, rhythm, answer, onDone }) 
       {answer && (
         <>
           <h2>{isCorrect ? 'Correct' : 'Incorrect'}</h2>
-          <p>Beats: {rhythm.join(' ')}</p>
+          <p>Correct beats: {rhythm.join(' ')}</p>
+          {!isCorrect && <p>Your beats: {answer.join(' ')}</p>}
           <p>
             Note names:
-            {groupedRhythmBeatsFlat.map(getDurationLabel).join(' ')}
+            {groupedAnswerBeats.flat().map(getDurationLabel).join(' ')}
           </p>
+          {!isCorrect && (
+            <p>
+              Your note names:
+              {groupedRhythmBeatsFlat.map(getDurationLabel).join(' ')}
+            </p>
+          )}
           <button type="button" onClick={() => onDone(isCorrect)}>
             Next
           </button>

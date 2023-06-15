@@ -53,6 +53,12 @@ describe('notes', () => {
       expect(tiedNote.duration).toEqual('8');
       expect(tiedNote.modifiers).toHaveLength(0);
       expect(tiedNote.keys).toEqual(['F/4']);
+
+      const rest = getStaveNote('F/4', '4r');
+      expect(rest.duration).toEqual('4');
+      expect(rest.modifiers).toHaveLength(0);
+      expect(rest.keys).toEqual(['F/4']);
+      expect(isStaveRest(rest)).toBe(true);
     });
 
     it('should return note with accidentals', () => {
@@ -144,6 +150,12 @@ describe('notes', () => {
       expect(tiedChord.duration).toEqual('8');
       expect(tiedChord.modifiers).toHaveLength(0);
       expect(tiedChord.keys).toEqual(['F/4', 'G/6']);
+
+      const rest = getStaveChord(['F/4', 'G/5'], '4r');
+      expect(rest.duration).toEqual('4');
+      expect(rest.modifiers).toHaveLength(0);
+      expect(rest.keys).toEqual(['F/4']);
+      expect(isStaveRest(rest)).toBe(true);
     });
 
     it('should return chord with accidentals', () => {

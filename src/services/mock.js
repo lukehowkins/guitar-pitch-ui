@@ -89,5 +89,14 @@ export const getRandomRhythm = (timeSignature, difficulty) => {
   const totalBeats = getTotalBeats(timeSignature);
   const beats = ALL_BEATS.slice(0, Math.floor(2 + (difficulty * 10) / ALL_BEATS.length));
 
-  return rhythmHelper(totalBeats, beats);
+  let rhythm = rhythmHelper(totalBeats, beats);
+
+  if (difficulty > 3) {
+    rhythm = rhythm.map((beats, i) => {
+      if (i % 2 === 0 && getRandomNumber(10) > 4) return `${beats}r`;
+      return beats;
+    });
+  }
+
+  return rhythm;
 };

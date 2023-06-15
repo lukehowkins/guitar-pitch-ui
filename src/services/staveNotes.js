@@ -2,6 +2,7 @@ import { Accidental, StaveNote, StaveTie, Dot } from 'vexflow';
 import { BEATS_TO_DURATIONS_MAP, DURATION_LABELS, WHOLE_BEATS, KEYS } from '../constants/theory';
 import { ERROR_INVALID_BEATS, ERROR_INVALID_KEY } from '../constants/errors';
 import { getNoteInfo } from './notes';
+import { getBeats, isRest } from './rhythm';
 
 const getAccidental = (note, key = 'C') => {
   const nonAccidentals = KEYS[key];
@@ -43,9 +44,10 @@ const addModifier =
 export const isStaveRest = (staveNote) => staveNote.noteType === 'r';
 
 export const getStaveRest = (beats = 4, color = 'black', key = 'B/4') => {
+  const keys = [key];
   const duration = BEATS_TO_DURATIONS_MAP[beats];
   if (!duration) throw ERROR_INVALID_BEATS;
-  const staveRest = new StaveNote({ keys: [key], duration: `${duration}r` });
+  const staveRest = new StaveNote({ keys, duration: `${duration}r` });
   staveRest.setStyle({ fillStyle: color, strokeStyle: color });
   // TODO shouldn't be based on a label
   if (DURATION_LABELS[beats].includes('Dotted')) Dot.buildAndAttach([staveRest]);
@@ -54,7 +56,8 @@ export const getStaveRest = (beats = 4, color = 'black', key = 'B/4') => {
 };
 
 export const getStaveNote = (pitch, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
-  const absBeats = Math.abs(beats);
+  const absBeats = getBeats(beats);
+  if (isRest(beats)) return getStaveRest(absBeats, color, pitch);
   if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;
   const staveNote = new StaveNote({ keys: [pitch], duration: BEATS_TO_DURATIONS_MAP[absBeats], auto_stem: true });
   staveNote.setStyle({ fillStyle: color, strokeStyle: color });
@@ -66,7 +69,8 @@ export const getStaveNote = (pitch, beats = 4, keySignature = 'C', color = 'blac
 };
 
 export const getStaveChord = (keys, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
-  const absBeats = Math.abs(beats);
+  const absBeats = getBeats(beats);
+  if (isRest(beats)) return getStaveRest(absBeats, color, keys[0]);
   if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;
   const staveChord = new StaveNote({ keys, duration: BEATS_TO_DURATIONS_MAP[absBeats], auto_stem: true });
   staveChord.setStyle({ fillStyle: color, strokeStyle: color });
