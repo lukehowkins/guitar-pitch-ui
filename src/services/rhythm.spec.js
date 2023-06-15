@@ -36,12 +36,6 @@ describe('rhythm', () => {
   });
 
   describe('groupRhythmPerBeat()', () => {
-    it('should throw', () => {
-      expect(() => groupRhythmPerBeat([], '4/4')).toThrowError(new Error('Not enough beats'));
-      expect(() => groupRhythmPerBeat([1, 1], '2/4')).toThrowError(new Error('Not enough beats'));
-      expect(() => groupRhythmPerBeat([16], '2/4')).toThrowError(new Error('Too many beats'));
-    });
-
     it('should return value when notes are smaller than beat', () => {
       expect(groupRhythmPerBeat([4, 4, '4', 4], '4/4')).toEqual([[4], [4], ['4'], [4]]);
       expect(groupRhythmPerBeat([2, 2, 1, 2, 1, 1, 1, 1, 1], '3/4')).toEqual([
@@ -87,6 +81,13 @@ describe('rhythm', () => {
         [-2, 4],
         [-3, 3],
       ]);
+    });
+
+    it('should fit rhythm into time signature', () => {
+      expect(groupRhythmPerBeat([1, 1], '2/4')).toEqual([[1, 1, '2r'], ['4r']]);
+      expect(groupRhythmPerBeat([16], '2/4')).toEqual([[4], [-4]]);
+      expect(groupRhythmPerBeat([8, 7, 2, '2r', 2], '4/4')).toEqual([[4], [-4], [4], [-3, 1]]);
+      expect(groupRhythmPerBeat([2, 4], '3/4')).toEqual([[2, 2], [-2, '2r'], ['4r']]);
     });
   });
 

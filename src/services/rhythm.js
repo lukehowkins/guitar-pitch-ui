@@ -60,6 +60,24 @@ const getRhythmsPerBeat = (rhythmBeats, beatsPerGroup, numbOfGroups) => {
   return groupedBeats;
 };
 
+const padRhythm = (rhythmBeats, padding) => [...rhythmBeats, `${padding}r`];
+
+const trimRhythm = (rhythmBeats, totalBeats) => {
+  let acc = 0;
+  let rhythm = [];
+  for (let i = 0; i < rhythmBeats.length; i++) {
+    if (acc === totalBeats) break;
+    const currentBeats = getBeats(rhythmBeats[i]);
+    if (acc + currentBeats > totalBeats) {
+      rhythm.push(totalBeats - acc);
+      break;
+    }
+    acc += currentBeats;
+    rhythm.push(rhythmBeats[i]);
+  }
+  return rhythm;
+};
+
 export const groupRhythmPerBeat = (rhythmBeats, timeSignature) => {
   if (!rhythmBeats || !timeSignature) return;
   const totalBeats = getTotalBeats(timeSignature);
@@ -68,11 +86,13 @@ export const groupRhythmPerBeat = (rhythmBeats, timeSignature) => {
   const beatsPerGroup = denominator === '8' && numerator % 3 === 0 ? 6 : 4;
   const numbOfGroups = totalBeats / beatsPerGroup;
 
-  const totalRhythmBeats = rhythmBeats.reduce((acc, beats) => acc + +beats, 0);
-  if (totalRhythmBeats > totalBeats) throw ERROR_TOO_MANY_BEATS;
-  if (totalRhythmBeats < totalBeats) throw ERROR_TOO_FEW_BEATS;
+  const totalRhythmBeats = rhythmBeats.reduce((acc, beats) => acc + getBeats(beats), 0);
+  let rhythm = rhythmBeats;
+  const beatsDiff = totalBeats - totalRhythmBeats;
+  if (beatsDiff < 0) rhythm = trimRhythm(rhythmBeats, totalBeats);
+  if (beatsDiff > 0) rhythm = padRhythm(rhythmBeats, beatsDiff);
 
-  return getRhythmsPerBeat(rhythmBeats, beatsPerGroup, numbOfGroups);
+  return getRhythmsPerBeat(rhythm, beatsPerGroup, numbOfGroups);
 };
 
 export const getDurationLabel = (duration) => {
