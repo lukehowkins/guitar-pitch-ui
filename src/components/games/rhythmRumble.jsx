@@ -25,7 +25,6 @@ export default function RhythmRumble({ timeSignature, rhythm, answer, onDone }) 
   const groupedRhythmBeatsFlat = groupedRhythmBeats.flat();
   const groupedAnswerBeats = groupRhythmPerBeat(answer, timeSignature);
 
-  // TODO 8, don't tie 4 to 4
   const staveNotes = groupedRhythmBeats.map((group) => group.map((beats) => getStaveNote(RHYTHM_NOTE, beats)));
   const staveAnswer = groupedAnswerBeats?.map((group) =>
     group.map((beats) => getStaveNote(ANSWER_NOTE, beats, 'C', 'red')),

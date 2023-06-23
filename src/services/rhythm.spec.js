@@ -54,9 +54,10 @@ describe('rhythm', () => {
     });
 
     it('should return value tied across beats', () => {
+      expect(groupRhythmPerBeat([13, 3], '4/4')).toEqual([[12], [-1, 3]]);
       expect(groupRhythmPerBeat([2, 4, 1, 1, 4], '3/4')).toEqual([[2, 2], [-2, 1, 1], [4]]);
-      expect(groupRhythmPerBeat([6, 4, 6, 4], '5/4')).toEqual([[4], [-2, 2], [-2, 2], [-4], [4]]);
-      expect(groupRhythmPerBeat([6, '4r', 6, 4], '5/4')).toEqual([[4], [-2, '2r'], ['2r', 2], [-4], [4]]);
+      expect(groupRhythmPerBeat([6, 4, 6, 4], '5/4')).toEqual([[6], [2], [-2, 2], [-4], [4]]);
+      expect(groupRhythmPerBeat([6, '4r', 6, 4], '5/4')).toEqual([[6], ['2r'], ['2r', 2], [-4], [4]]);
       expect(groupRhythmPerBeat([4, 6, '1r', 2, 4, 1], '9/8')).toEqual([
         [4, 2],
         [-4, '1r', 1],
@@ -73,8 +74,8 @@ describe('rhythm', () => {
     });
 
     it('should return value for notes bigger than beat', () => {
-      expect(groupRhythmPerBeat([8, 8], '4/4')).toEqual([[4], [-4], [4], [-4]]);
-      expect(groupRhythmPerBeat([16], '4/4')).toEqual([[4], [-4], [-4], [-4]]);
+      expect(groupRhythmPerBeat([8, 8], '4/4')).toEqual([[8], [8]]);
+      expect(groupRhythmPerBeat([16], '4/4')).toEqual([[16]]);
       expect(groupRhythmPerBeat([1, 9, 3, 3], '4/4')).toEqual([[1, 3], [-4], [-2, 2], [-1, 3]]);
       expect(groupRhythmPerBeat([5, 3, 7, 3], '9/8')).toEqual([
         [5, 1],
@@ -85,8 +86,8 @@ describe('rhythm', () => {
 
     it('should fit rhythm into time signature', () => {
       expect(groupRhythmPerBeat([1, 1], '2/4')).toEqual([[1, 1, '2r'], ['4r']]);
-      expect(groupRhythmPerBeat([16], '2/4')).toEqual([[4], [-4]]);
-      expect(groupRhythmPerBeat([8, 7, 2, '2r', 2], '4/4')).toEqual([[4], [-4], [4], [-3, 1]]);
+      expect(groupRhythmPerBeat([16], '2/4')).toEqual([[8]]);
+      expect(groupRhythmPerBeat([8, 7, 2, '2r', 2], '4/4')).toEqual([[8], [4], [-3, 1]]);
       expect(groupRhythmPerBeat([2, 4], '3/4')).toEqual([[2, 2], [-2, '2r'], ['4r']]);
     });
   });

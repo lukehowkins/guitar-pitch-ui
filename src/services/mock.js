@@ -78,7 +78,11 @@ const rhythmHelper = (totalBeats, supportedBeats, rhythm = []) => {
   const beatsLeft = totalBeats - currentDuration;
   const supportedPossibleBeats = supportedBeats.filter((beats) => beats <= beatsLeft);
   if (!supportedPossibleBeats.length) return rhythmHelper(totalBeats, supportedBeats);
-  if (supportedPossibleBeats.includes(beatsLeft) && getRandomNumber(10) > 8) return [...rhythm, beatsLeft];
+  if (
+    supportedPossibleBeats.includes(beatsLeft) &&
+    getRandomNumber(10 + supportedPossibleBeats.length) > 8 + supportedPossibleBeats.length
+  )
+    return [...rhythm, beatsLeft];
   const nextDuration = getRandomEl(supportedPossibleBeats);
   if (nextDuration + currentDuration > totalBeats) return rhythmHelper(totalBeats, supportedPossibleBeats, rhythm);
   const newRhythm = [...rhythm, nextDuration];
