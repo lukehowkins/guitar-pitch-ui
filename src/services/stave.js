@@ -5,8 +5,8 @@ import { getSortedChord, getStepDiff } from './notes';
 import { areChordsSame } from './notes';
 
 const MIN_WIDTH = 500;
-const MIN_WIDTH_PER_NOTE = 40;
-const TREBEL_CLEF_WIDTH = 36;
+const MIN_WIDTH_PER_NOTE = 40; // try make up to 60 if chord / accidentals?
+const TREBLE_CLEF_WIDTH = 36;
 const HEIGHT = 200;
 
 const forceStemDirection = (sortedChord) => {
@@ -15,6 +15,9 @@ const forceStemDirection = (sortedChord) => {
 };
 
 const getStemDirection = (sortedChord1, sortedChord2) => {
+  const forceStem = forceStemDirection(sortedChord1);
+  if (forceStem) return forceStem;
+
   for (let i = 0; i < sortedChord1.length; i++) {
     for (let j = 0; j < sortedChord2.length; j++) {
       const diff = getStepDiff(sortedChord1[i], sortedChord2[j]);
@@ -25,7 +28,7 @@ const getStemDirection = (sortedChord1, sortedChord2) => {
   }
 
   if (getStepDiff(sortedChord1[0], sortedChord2[0]) === 0) return;
-  return forceStemDirection(sortedChord1) || getStepDiff(sortedChord1[0], sortedChord2[0]) < 0 ? Stem.UP : Stem.DOWN;
+  return getStepDiff(sortedChord1[0], sortedChord2[0]) < 0 ? Stem.UP : Stem.DOWN;
 };
 
 const setStemDirections = (staveNotes, staveSecondVoice) => {
@@ -97,11 +100,11 @@ export const generateStaveWithStaveNotes = (
   const minWidthPerNote = staveSecondVoice ? 2 * MIN_WIDTH_PER_NOTE : MIN_WIDTH_PER_NOTE;
   const calcWidth =
     Math.max(staveNotes.length, staveSecondVoice?.length || 0) * minWidthPerNote +
-    TREBEL_CLEF_WIDTH +
+    TREBLE_CLEF_WIDTH +
     keySignatureWidth;
   const width = Math.max(MIN_WIDTH, Math.min(ref.clientWidth, calcWidth));
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
-  renderer.resize(width, HEIGHT);
+  renderer.resize(width, HEIGHT); // Total img size
   const context = renderer.getContext();
 
   const stave = new Stave(0, 40, width - 1);
@@ -123,7 +126,8 @@ export const generateStaveWithStaveNotes = (
     const voices = [voice1, voice2];
     const beams = getBeamNotes(staveNotesGrouped);
     const beams2 = getBeamNotes(staveSecondVoiceGrouped);
-    new Formatter().joinVoices(voices).format(voices, width);
+    const noteAreaWidth = Math.floor(stave.getNoteEndX() - stave.getNoteStartX() - 10);
+    new Formatter().joinVoices(voices).format(voices, noteAreaWidth);
     voices.forEach((voice) => voice.draw(context, stave));
     [...beams, ...beams2].forEach((b) => b.setContext(context).draw());
   } else {

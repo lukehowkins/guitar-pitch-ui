@@ -8,12 +8,14 @@ describe('notes', () => {
       expect(rest.duration).toEqual('4');
       expect(rest.modifiers).toHaveLength(0);
       expect(rest.keys).toEqual(['B/4']);
+      expect(rest.isDotted()).toBe(false);
       expect(isStaveRest(rest)).toBe(true);
 
       rest = getStaveRest(12, 'red', 'E/3');
       expect(rest.duration).toEqual('2');
       expect(rest.modifiers).toHaveLength(1);
       expect(rest.modifiers[0].attrs.type).toEqual('Dot');
+      expect(rest.isDotted()).toBe(true);
       expect(rest.keys).toEqual(['E/3']);
     });
   });
@@ -32,6 +34,7 @@ describe('notes', () => {
       expect(note.duration).toEqual('4');
       expect(note.modifiers).toHaveLength(0);
       expect(note.keys).toEqual(['C/4']);
+      expect(note.isDotted()).toBe(false);
       expect(isStaveRest(note)).toBe(false);
 
       const note2 = getStaveNote('Bb/4', 8, 'Dm');
@@ -100,6 +103,7 @@ describe('notes', () => {
       expect(note.modifiers).toHaveLength(1);
       expect(note.modifiers[0].attrs.type).toEqual('Dot');
       expect(note.keys).toEqual(['F/4']);
+      expect(note.isDotted()).toBe(true);
       expect(isStaveRest(note)).toBe(false);
 
       const note2 = getStaveNote('F/4', 12);
@@ -107,6 +111,7 @@ describe('notes', () => {
       expect(note2.modifiers).toHaveLength(1);
       expect(note2.modifiers[0].attrs.type).toEqual('Dot');
       expect(note2.keys).toEqual(['F/4']);
+      expect(note2.isDotted()).toBe(true);
     });
   });
 
@@ -214,6 +219,7 @@ describe('notes', () => {
       const chord = getStaveChord(['F/4', 'A/4'], 3);
       expect(chord.duration).toEqual('8');
       expect(chord.modifiers).toHaveLength(2);
+      expect(chord.isDotted()).toBe(true);
       expect(chord.modifiers[0].attrs.type).toEqual('Dot');
       expect(chord.modifiers[1].attrs.type).toEqual('Dot');
       expect(chord.keys).toEqual(['F/4', 'A/4']);
@@ -222,6 +228,7 @@ describe('notes', () => {
       const chord2 = getStaveChord(['F/4', 'A/4'], 12);
       expect(chord2.duration).toEqual('2');
       expect(chord2.modifiers).toHaveLength(2);
+      expect(chord2.isDotted()).toBe(true);
       expect(chord2.modifiers[0].attrs.type).toEqual('Dot');
       expect(chord2.modifiers[1].attrs.type).toEqual('Dot');
       expect(chord2.keys).toEqual(['F/4', 'A/4']);

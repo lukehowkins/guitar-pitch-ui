@@ -177,7 +177,7 @@ export default function Debug() {
       />
       <h4>
         Notes over / under a certain note will always have stems down / up, and clashing chords both having stem in same
-        direction (TODO fix high note stem direction)
+        direction
       </h4>
       <SingleStave
         notes={['Bb/4', ['Eb/4', 'F/4', 'A/4'], ['Ab/4', 'Ab/5'], ['F/2', 'A/2'], ['G/2', 'C#/3'], ['C#/7', 'E/7']]}
@@ -190,7 +190,7 @@ export default function Debug() {
           ['Bb/6', 'E/7'],
         ]}
         keySignature="D"
-        timeSignature="5/4"
+        timeSignature="6/4"
         secondVoiceColor="red"
       />
 
@@ -270,7 +270,7 @@ export default function Debug() {
 
       <TiedNotesExample />
 
-      <p>TODO why cutting off</p>
+      <p>notes placed proportionally</p>
       <SingleStave
         timeSignature="6/8"
         staveNotes={[
@@ -380,10 +380,11 @@ export default function Debug() {
 
       <p>Same note rhythms will preserve stem direction</p>
       <SingleStave
-        timeSignature="6/8"
+        timeSignature="9/8"
         staveNotes={[
           [getStaveNote('G/5', 2), getStaveNote('G/5', 4)],
           [getStaveNote('G/5', 1), getStaveNote('G/5', 2), getStaveNote('G/5', 1), getStaveNote('G/5', 2)],
+          [getStaveRest(3, 'black', 'G/5'), getStaveNote('G/5', 3)],
         ]}
         secondVoice={[
           [getStaveNote('D/4', 2), getStaveNote('D/4', 4)],
@@ -394,6 +395,7 @@ export default function Debug() {
             getStaveNote('D/4', 2),
             getStaveNote('D/4', 1),
           ],
+          [getStaveNote('D/4', 1), getStaveNote('D/4', 2), getStaveNote('D/4', 2), getStaveNote('D/4', 1)],
         ]}
       />
     </>
