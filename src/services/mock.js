@@ -1,5 +1,5 @@
 import { ERROR_TOO_MANY_BEATS } from '../constants/errors';
-import { NOTES, KEYS, INTERVALS, TIMESIGNATURES, ALL_BEATS } from '../constants/theory';
+import { NOTES, KEYS, INTERVALS, TIME_SIGNATURES, ALL_BEATS } from '../constants/theory';
 import { getNoteAbove, getNoteBelow, getNoteInfo, getSortedChord, getStepDiff } from './notes';
 import { getTotalBeats } from './rhythm';
 
@@ -14,7 +14,7 @@ export const getRandomKey = (highestNumberOfAccidentals = 7) => {
   return getRandomEl(keys);
 };
 
-export const getRandomTimeSignature = (difficulty) => getRandomEl(TIMESIGNATURES.slice(0, 1 + difficulty));
+export const getRandomTimeSignature = (difficulty) => getRandomEl(TIME_SIGNATURES.slice(0, 1 + difficulty));
 
 // staved note
 export const getRandomNote = (lowestNote = 'E/3', highestNote = 'E/7') => {
@@ -94,6 +94,8 @@ export const getRandomRhythm = (timeSignature, difficulty) => {
   const beats = ALL_BEATS.slice(0, Math.floor(2 + (difficulty * 10) / ALL_BEATS.length));
 
   let rhythm = rhythmHelper(totalBeats, beats);
+
+  if (rhythm.length === 1) return getRandomRhythm(timeSignature, difficulty);
 
   if (difficulty > 3) {
     rhythm = rhythm.map((beats, i) => {

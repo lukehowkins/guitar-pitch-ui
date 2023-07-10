@@ -1,4 +1,4 @@
-import { ERROR_INVALID_DURATION, ERROR_TOO_FEW_BEATS, ERROR_TOO_MANY_BEATS } from '../constants/errors';
+import { ERROR_INVALID_BEATS, ERROR_INVALID_DURATION } from '../constants/errors';
 import { BEATS_TO_DURATIONS_MAP, DURATION_LABELS, DURATION_TO_BEATS_MAP } from '../constants/theory';
 
 export const isRest = (beats) => !!beats?.endsWith?.('r');
@@ -52,7 +52,7 @@ const getRhythmsPerBeat = (rhythmBeats, beatsPerGroup, numbOfGroups) => {
             helper(beats - beatsPerGroup, -1);
           }
         };
-        helper(currentBeats);
+        helper(rhythmBeats[i]);
       }
     }
   }
@@ -60,7 +60,39 @@ const getRhythmsPerBeat = (rhythmBeats, beatsPerGroup, numbOfGroups) => {
   return groupedBeats;
 };
 
-const padRhythm = (rhythmBeats, padding) => [...rhythmBeats, `${padding}r`];
+const convertBeatToTiedBeats = (b, acc = []) => {
+  const beats = isRest(b) ? getBeats(b) : +b;
+
+  if (beats < 0) {
+    if (BEATS_TO_DURATIONS_MAP[beats * -1]) return [beats];
+    throw ERROR_INVALID_BEATS;
+  }
+
+  if (beats < 1) throw ERROR_INVALID_BEATS;
+  const addBeats = (newBeats) => {
+    if (isRest(b)) return acc.length ? [...acc, `${newBeats}r`] : [`${newBeats}r`];
+    return acc.length ? [...acc, newBeats * -1] : [newBeats];
+  };
+  if (BEATS_TO_DURATIONS_MAP[beats]) return addBeats(beats);
+
+  const maxBeats = Object.keys(BEATS_TO_DURATIONS_MAP).reduce(
+    (max, current) => (current > max && current <= beats ? +current : max),
+    0,
+  );
+
+  const diff = beats - maxBeats;
+  if (Number.isNaN(diff)) throw ERROR_INVALID_BEATS;
+  return convertBeatToTiedBeats(isRest(b) ? `${diff}r` : diff, addBeats(maxBeats));
+};
+
+export const convertBeatsToTiedBeats = (rhythmBeats = []) => {
+  return rhythmBeats.reduce((acc, beats) => {
+    const durations = convertBeatToTiedBeats(beats);
+    return [...acc, ...durations];
+  }, []);
+};
+
+const padRhythm = (rhythmBeats, padding) => [...rhythmBeats, ...convertBeatsToTiedBeats([`${padding}r`])];
 
 const trimRhythm = (rhythmBeats, totalBeats) => {
   let acc = 0;
@@ -69,7 +101,7 @@ const trimRhythm = (rhythmBeats, totalBeats) => {
     if (acc === totalBeats) break;
     const currentBeats = getBeats(rhythmBeats[i]);
     if (acc + currentBeats > totalBeats) {
-      rhythm.push(totalBeats - acc);
+      rhythm.push(...convertBeatsToTiedBeats([totalBeats - acc]));
       break;
     }
     acc += currentBeats;
@@ -96,12 +128,16 @@ const untieLongNotes = (groupedRhythm, beatsPerGroup) => {
   }, []);
 };
 
+const getBeatsPerGroup = (timeSignature) => {
+  const [numerator, denominator] = timeSignature.split('/');
+  if (denominator == 8 && numerator % 3 === 0) return 6;
+  return DURATION_TO_BEATS_MAP[denominator] || 1;
+};
+
 export const groupRhythmPerBeat = (rhythmBeats, timeSignature) => {
   if (!rhythmBeats || !timeSignature) return;
   const totalBeats = getTotalBeats(timeSignature);
-  const [numerator, denominator] = timeSignature.split('/');
-  // TODO can this be worked out better?
-  const beatsPerGroup = denominator === '8' && numerator % 3 === 0 ? 6 : 4;
+  const beatsPerGroup = getBeatsPerGroup(timeSignature);
   const numbOfGroups = totalBeats / beatsPerGroup;
 
   const totalRhythmBeats = rhythmBeats.reduce((acc, beats) => acc + getBeats(beats), 0);
@@ -110,7 +146,8 @@ export const groupRhythmPerBeat = (rhythmBeats, timeSignature) => {
   if (beatsDiff < 0) rhythm = trimRhythm(rhythmBeats, totalBeats);
   if (beatsDiff > 0) rhythm = padRhythm(rhythmBeats, beatsDiff);
 
-  const rhythmsPerBeat = getRhythmsPerBeat(rhythm, beatsPerGroup, numbOfGroups);
+  let rhythmsPerBeat = getRhythmsPerBeat(rhythm, beatsPerGroup, numbOfGroups);
+  rhythmsPerBeat = rhythmsPerBeat.map(convertBeatsToTiedBeats);
   return untieLongNotes(rhythmsPerBeat, beatsPerGroup);
 };
 

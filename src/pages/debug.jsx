@@ -227,7 +227,7 @@ export default function Debug() {
       <h3>Rhythm</h3>
       <p>Doesn't force correct beats in time signature, but num_beats can causes to cut off</p>
       <SingleStave
-        timeSignature="4/4"
+        timeSignature="2/2"
         staveNotes={[
           getStaveNote('C/5', 1),
           getStaveNote('C/5', 2),
@@ -266,6 +266,13 @@ export default function Debug() {
           getStaveRest(12, 'red'),
           getStaveRest(16),
         ]}
+      />
+
+      <p>TODO rest disappears</p>
+      <SingleStave
+        timeSignature="3/4"
+        staveNotes={[getStaveRest(1, 'black', 'G/5'), getStaveNote('G/5', 3)]}
+        secondVoice={[getStaveRest(1, 'red', 'D/4'), getStaveNote('D/4', 3)]}
       />
 
       <TiedNotesExample />

@@ -109,4 +109,4 @@ export const DURATION_LABELS = {
   1: 'Semiquaver',
 };
 
-export const TIMESIGNATURES = ['4/4', '3/4', '2/4', '5/4', '6/8', '9/8', '12/8'];
+export const TIME_SIGNATURES = ['2/2', '3/2', '4/4', '3/4', '2/4', '5/4', '6/8', '9/8', '12/8'];

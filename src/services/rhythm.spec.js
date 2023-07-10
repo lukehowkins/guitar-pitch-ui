@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { getTotalBeats, groupRhythmPerBeat, getDurationLabel, isRest, getBeats } from './rhythm';
+import {
+  getTotalBeats,
+  groupRhythmPerBeat,
+  convertBeatsToTiedBeats,
+  getDurationLabel,
+  isRest,
+  getBeats,
+} from './rhythm';
 
 describe('rhythm', () => {
   describe('isRest()', () => {
@@ -36,8 +43,13 @@ describe('rhythm', () => {
   });
 
   describe('groupRhythmPerBeat()', () => {
+    it('should throw error', () => {
+      expect(() => groupRhythmPerBeat([2.5], '4/4')).toThrowError(new Error('Invalid beats'));
+      expect(() => groupRhythmPerBeat(['4.5r'], '4/4')).toThrowError(new Error('Invalid beats'));
+    });
+
     it('should return value when notes are smaller than beat', () => {
-      expect(groupRhythmPerBeat([4, 4, '4', 4], '4/4')).toEqual([[4], [4], ['4'], [4]]);
+      expect(groupRhythmPerBeat([4, 4, '4', 4], '4/4')).toEqual([[4], [4], [4], [4]]);
       expect(groupRhythmPerBeat([2, 2, 1, 2, 1, 1, 1, 1, 1], '3/4')).toEqual([
         [2, 2],
         [1, 2, 1],
@@ -46,10 +58,6 @@ describe('rhythm', () => {
       expect(groupRhythmPerBeat([2, '2r', 2, '1r', 1, 2, 1, 1], '6/8')).toEqual([
         [2, '2r', 2],
         ['1r', 1, 2, 1, 1],
-      ]);
-      expect(groupRhythmPerBeat([3, 0.5, 0.5, 0.5, 1.5, 2], '2/4')).toEqual([
-        [3, 0.5, 0.5],
-        [0.5, 1.5, 2],
       ]);
     });
 
@@ -63,13 +71,18 @@ describe('rhythm', () => {
         [-4, '1r', 1],
         [-1, 4, 1],
       ]);
-      expect(groupRhythmPerBeat([3, 1.5, 1.5, 2], '2/4')).toEqual([
+      expect(groupRhythmPerBeat([3, 2, 1, 2], '2/4')).toEqual([
         [3, 1],
-        [-0.5, 1.5, 2],
+        [-1, 1, 2],
       ]);
-      expect(groupRhythmPerBeat([4, 3.5, 4.5], '6/8')).toEqual([
+      expect(groupRhythmPerBeat([4, 4, 4], '6/8')).toEqual([
         [4, 2],
-        [-1.5, 4.5],
+        [-2, 4],
+      ]);
+      expect(groupRhythmPerBeat([16, -1, 4, -1, 2], '3/2')).toEqual([[16], [-1, 4, -1, 2]]);
+      expect(groupRhythmPerBeat(['1r', 5, 1, '4r', 1], '6/8')).toEqual([
+        ['1r', 4, -1],
+        [1, '4r', 1],
       ]);
     });
 
@@ -78,10 +91,12 @@ describe('rhythm', () => {
       expect(groupRhythmPerBeat([16], '4/4')).toEqual([[16]]);
       expect(groupRhythmPerBeat([1, 9, 3, 3], '4/4')).toEqual([[1, 3], [-4], [-2, 2], [-1, 3]]);
       expect(groupRhythmPerBeat([5, 3, 7, 3], '9/8')).toEqual([
-        [5, 1],
+        [4, -1, 1],
         [-2, 4],
         [-3, 3],
       ]);
+      expect(groupRhythmPerBeat([14, 4, 4, '2r'], '3/2')).toEqual([[8], [-6, 2], [-2, 4, '2r']]);
+      expect(groupRhythmPerBeat([18, 2, 4], '3/2')).toEqual([[16], [-2, 2, 4]]);
     });
 
     it('should fit rhythm into time signature', () => {
@@ -89,6 +104,34 @@ describe('rhythm', () => {
       expect(groupRhythmPerBeat([16], '2/4')).toEqual([[8]]);
       expect(groupRhythmPerBeat([8, 7, 2, '2r', 2], '4/4')).toEqual([[8], [4], [-3, 1]]);
       expect(groupRhythmPerBeat([2, 4], '3/4')).toEqual([[2, 2], [-2, '2r'], ['4r']]);
+      expect(groupRhythmPerBeat([1, 3, 7], '2/2')).toEqual([
+        [1, 3, 4],
+        [-3, '4r', '1r'],
+      ]);
+      expect(groupRhythmPerBeat([17, 2, 9], '3/2')).toEqual([[16], [-1, 2, 4, -1]]);
+    });
+  });
+
+  describe('convertBeatsToTiedBeats()', () => {
+    it('should throw error', () => {
+      expect(() => convertBeatsToTiedBeats([0.5])).toThrowError(new Error('Invalid beats'));
+      expect(() => convertBeatsToTiedBeats([2.5])).toThrowError(new Error('Invalid beats'));
+      expect(() => convertBeatsToTiedBeats([-3.5])).toThrowError(new Error('Invalid beats'));
+      expect(() => convertBeatsToTiedBeats(['4.5r'])).toThrowError(new Error('Invalid beats'));
+    });
+
+    it('should convert beats to durations', () => {
+      expect(convertBeatsToTiedBeats()).toEqual([]);
+      expect(convertBeatsToTiedBeats([])).toEqual([]);
+      expect(convertBeatsToTiedBeats([1, 2, 3, 4, 6, 8, 12, 16])).toEqual([1, 2, 3, 4, 6, 8, 12, 16]);
+      expect(convertBeatsToTiedBeats([5, 7, 9, 10, 11, 13, 14, 15])).toEqual([
+        4, -1, 6, -1, 8, -1, 8, -2, 8, -3, 12, -1, 12, -2, 12, -3,
+      ]);
+      expect(convertBeatsToTiedBeats([2, 7, 14, 23])).toEqual([2, 6, -1, 12, -2, 16, -6, -1]);
+
+      expect(convertBeatsToTiedBeats([1, -4, -1, -2])).toEqual([1, -4, -1, -2]);
+      expect(convertBeatsToTiedBeats(['7', 2, '5r', 3, '1'])).toEqual([6, -1, 2, '4r', '1r', 3, 1]);
+      expect(convertBeatsToTiedBeats(['3r', '2r', '3r'])).toEqual(['3r', '2r', '3r']);
     });
   });
 

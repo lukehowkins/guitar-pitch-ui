@@ -28,3 +28,4 @@ A standard guitar's range is E/2 pitch (E/3 staved) to E/6 (E/7 staved)
 - dotted notes shouldn't be based on a labels
 - Same notes are drawn together, even if they have different accidentals (in debug)
 - should rhythm result be correct if extra notes are played?
+- 2nd voice rest note disappears
