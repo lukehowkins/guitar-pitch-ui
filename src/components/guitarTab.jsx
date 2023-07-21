@@ -1,3 +1,4 @@
+import './stave.scss';
 import React, { useEffect, useRef } from 'react';
 import { generateTabWithNotes, generateTabWithPositions, generateTabWithTabNotes } from '../services/tab';
 
@@ -10,5 +11,5 @@ export default function GuitarTab({ tabNotes, notes, positions, lowestFret, high
     else if (notes) generateTabWithNotes(divRef.current, notes, lowestFret, highestFret);
   }, [tabNotes, notes, positions, lowestFret, highestFret]);
 
-  return <div ref={divRef} />;
+  return <div className="stave" ref={divRef} />;
 }

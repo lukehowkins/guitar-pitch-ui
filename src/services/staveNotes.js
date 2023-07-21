@@ -3,6 +3,7 @@ import { BEATS_TO_DURATIONS_MAP, DURATION_LABELS, WHOLE_BEATS, KEYS } from '../c
 import { ERROR_INVALID_BEATS, ERROR_INVALID_KEY } from '../constants/errors';
 import { getNoteInfo } from './notes';
 import { getBeats, isRest } from './rhythm';
+import { THEMES, getDefaultColor } from './color';
 
 const getAccidental = (note, key = 'C') => {
   const nonAccidentals = KEYS[key];
@@ -46,7 +47,7 @@ const isDottedDuration = (beats) => DURATION_LABELS[beats]?.includes('Dotted');
 
 export const isStaveRest = (staveNote) => staveNote.noteType === 'r';
 
-export const getStaveRest = (beats = 4, color = 'black', key = 'B/4') => {
+export const getStaveRest = (beats = 4, color = getDefaultColor(THEMES.LIGHT), key = 'B/4') => {
   const keys = [key];
   const duration = BEATS_TO_DURATIONS_MAP[beats];
   if (!duration) throw ERROR_INVALID_BEATS;
@@ -62,7 +63,13 @@ export const getStaveRest = (beats = 4, color = 'black', key = 'B/4') => {
   return staveRest;
 };
 
-export const getStaveNote = (pitch, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
+export const getStaveNote = (
+  pitch,
+  beats = 4,
+  keySignature = 'C',
+  color = getDefaultColor(THEMES.LIGHT),
+  currentAccidentals = [],
+) => {
   const absBeats = getBeats(beats);
   if (isRest(beats)) return getStaveRest(absBeats, color, pitch);
   if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;
@@ -81,7 +88,13 @@ export const getStaveNote = (pitch, beats = 4, keySignature = 'C', color = 'blac
   return staveNote;
 };
 
-export const getStaveChord = (keys, beats = 4, keySignature = 'C', color = 'black', currentAccidentals = []) => {
+export const getStaveChord = (
+  keys,
+  beats = 4,
+  keySignature = 'C',
+  color = getDefaultColor(THEMES.LIGHT),
+  currentAccidentals = [],
+) => {
   const absBeats = getBeats(beats);
   if (isRest(beats)) return getStaveRest(absBeats, color, keys[0]);
   if (!WHOLE_BEATS.includes(absBeats)) throw ERROR_INVALID_BEATS;

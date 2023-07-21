@@ -1,4 +1,5 @@
 import '../constants/colors.scss';
+import './layout.scss';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/header';

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { getDefaultColor } from '../services/color';
 
 const STANDARD = ['e', 'B', 'G', 'D', 'A', 'E'];
 
@@ -28,6 +29,8 @@ export default function GuitarFretboard({ tuning = STANDARD, notes }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
+    context.fillStyle = getDefaultColor();
+    context.strokeStyle = getDefaultColor();
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.font = `${FONT_SIZE}px serif`;
 

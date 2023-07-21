@@ -1,3 +1,4 @@
+import './stave.scss';
 import React, { useEffect, useRef } from 'react';
 import { generateStaveWithNotes, generateStaveWithStaveNotes } from '../services/stave';
 
@@ -20,7 +21,7 @@ function SingleStave({
     }
   }, [staveNotes, notes, keySignature, timeSignature, secondVoice, secondVoiceColor, ties]);
 
-  return <div ref={divRef} />;
+  return <div className="stave" ref={divRef} />;
 }
 
 export default SingleStave;

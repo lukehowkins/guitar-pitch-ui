@@ -106,6 +106,8 @@ export const generateStaveWithStaveNotes = (
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
   renderer.resize(width, HEIGHT); // Total img size
   const context = renderer.getContext();
+  // context.fillStyle = getDefaultColor();
+  // context.strokeStyle = getDefaultColor();
 
   const stave = new Stave(0, 40, width - 1);
   stave.addClef('treble').addKeySignature(key).addTimeSignature(timeSignature);

@@ -20,6 +20,8 @@ export const generateTabWithTabNotes = (ref, tabNotes) => {
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
   renderer.resize(width, HEIGHT);
   const context = renderer.getContext();
+  // context.fillStyle = getDefaultColor();
+  // context.strokeStyle = getDefaultColor();
 
   const stave = new TabStave(0, -40, width - 1);
   stave.addClef('tab');

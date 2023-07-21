@@ -5,4 +5,13 @@
   --color-4: #9ba9ba;
   --color-5: #606060;
   --color-6: #333333;
+
+  @media (prefers-color-scheme: dark) {
+    --color-6: #f6f6f6;
+    --color-5: #d0d0d0;
+    --color-4: #b6b6d6;
+    --color-3: #9ba9ba;
+    --color-2: #606060;
+    --color-1: #333333;
+  }
 }
