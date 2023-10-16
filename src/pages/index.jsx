@@ -4,9 +4,11 @@ import Layout from './layout';
 import Home from './home';
 import Debug from './debug';
 import User from './user';
+import Metronome from './metronome';
 
 export const HOME_PATH = '';
 export const DEBUG_PATH = 'debug';
+export const METRONOME_PATH = 'metronome';
 export const USER_PATH = 'user';
 
 export default createBrowserRouter(
@@ -21,6 +23,10 @@ export default createBrowserRouter(
           element: <Home />,
         },
         {
+          path: METRONOME_PATH,
+          element: <Metronome />,
+        },
+        {
           path: USER_PATH,
           element: <User />,
         },
@@ -31,5 +37,5 @@ export default createBrowserRouter(
       ],
     },
   ],
-  { basename: '/guitar-pitch-ui/' }
+  { basename: '/guitar-pitch-ui/' },
 );

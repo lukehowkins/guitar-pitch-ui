@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { login } from '../services/user';
 import { useUserStore } from '../store/user';
-import { DEBUG_PATH, HOME_PATH, USER_PATH } from '../pages';
+import { DEBUG_PATH, HOME_PATH, METRONOME_PATH, USER_PATH } from '../pages';
 
 const getClassName = ({ isActive }) => `header__link${isActive ? ' header__link--active' : ''}`;
 
@@ -16,6 +16,9 @@ export default function Header() {
       <nav>
         <NavLink className={getClassName} to={HOME_PATH}>
           Home
+        </NavLink>
+        <NavLink className={getClassName} to={METRONOME_PATH}>
+          Metronome
         </NavLink>
         <NavLink className={getClassName} to={DEBUG_PATH}>
           Debug

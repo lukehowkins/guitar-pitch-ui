@@ -50,11 +50,11 @@ export default function GameSetup() {
         </label>
       ))}
       <label>
-        Total questions:
+        Total questions:{' '}
         <input type="number" min={0} max={50} name="total" value={formData.total} onChange={handleNumberChange} />
       </label>
       <label>
-        Difficulty
+        Difficulty{' '}
         <input
           type="number"
           min={0}
@@ -67,7 +67,7 @@ export default function GameSetup() {
       {formData.game !== RHYTHM_RUMBLE && (
         <>
           <label>
-            Lowest fret
+            Lowest fret{' '}
             <input
               type="number"
               min={0}
@@ -78,7 +78,7 @@ export default function GameSetup() {
             />
           </label>
           <label>
-            Highest fret
+            Highest fret{' '}
             <input
               type="number"
               min={(formData.lowestFret || 0) + 4}
@@ -91,7 +91,7 @@ export default function GameSetup() {
         </>
       )}
 
-      <button>submit</button>
+      <button className="game-setup__submit">submit</button>
     </form>
   );
 }
