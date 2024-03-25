@@ -89,7 +89,7 @@ const TiedNotesExample = () => {
   );
 };
 
-export default function Debug() {
+export default function DebugPage() {
   return (
     <>
       <Metronome loop />

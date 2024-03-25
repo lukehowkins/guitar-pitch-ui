@@ -16,7 +16,8 @@ function showNote(tabNote, stave, ctx, x) {
 
 export const generateTabWithTabNotes = (ref, tabNotes) => {
   ref.innerHTML = '';
-  const width = Math.min(Math.max(ref.clientWidth, MIN_WIDTH), tabNotes.length * MIN_WIDTH_PER_NOTE + TAB_CLEF_WIDTH);
+  const calcWidth = tabNotes.length * MIN_WIDTH_PER_NOTE + TAB_CLEF_WIDTH;
+  const width = Math.max(MIN_WIDTH, Math.min(ref.clientWidth, calcWidth));
   const renderer = new Renderer(ref, Renderer.Backends.SVG);
   renderer.resize(width, HEIGHT);
   const context = renderer.getContext();

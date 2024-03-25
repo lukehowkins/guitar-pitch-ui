@@ -4,7 +4,7 @@ import MetronomeForm from '../components/metronomeForm';
 
 const ONE_MIN = 60 * 1000;
 
-export default function User() {
+export default function MetronomePage() {
   const [beats, setBeats] = useState();
   const [tempo, setTempo] = useState();
 

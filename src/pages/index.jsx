@@ -1,14 +1,16 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Error from '../components/error';
 import Layout from './layout';
-import Home from './home';
-import Debug from './debug';
-import User from './user';
-import Metronome from './metronome';
+import HomePage from './home';
+import DebugPage from './debug';
+import UserPage from './user';
+import MetronomePage from './metronome';
+import TabPage from './tab';
 
 export const HOME_PATH = '';
 export const DEBUG_PATH = 'debug';
 export const METRONOME_PATH = 'metronome';
+export const TAB_PATH = 'tab';
 export const USER_PATH = 'user';
 
 export default createBrowserRouter(
@@ -20,19 +22,23 @@ export default createBrowserRouter(
       children: [
         {
           index: true,
-          element: <Home />,
+          element: <HomePage />,
+        },
+        {
+          path: TAB_PATH,
+          element: <TabPage />,
         },
         {
           path: METRONOME_PATH,
-          element: <Metronome />,
+          element: <MetronomePage />,
         },
         {
           path: USER_PATH,
-          element: <User />,
+          element: <UserPage />,
         },
         {
           path: DEBUG_PATH,
-          element: <Debug />,
+          element: <DebugPage />,
         },
       ],
     },

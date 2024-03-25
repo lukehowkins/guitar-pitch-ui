@@ -1,6 +1,6 @@
 import React from 'react';
 import KeyboardFlow from '../components/keyboardFlow';
 
-export default function Home() {
+export default function HomePage() {
   return <KeyboardFlow />;
 }
