@@ -2,7 +2,6 @@ import { useState } from 'react';
 import GuitarTab from '../components/guitarTab';
 import { getNoteInfo, shiftNote } from '../services/notes';
 import { getNote } from '../services/guitar';
-import TabForm from '../components/tabForm';
 
 const convertStringToNotes = (str) => {
   if (!str) return undefined;
@@ -50,16 +49,19 @@ const convertPositionsToNotes = (positions) => {
 const REPOSITION = false;
 const DEFAULT_VALUE = '';
 
-export default function TabPage() {
-  const [tabsCount, setTabsCount] = useState(1);
+export default function TabForm() {
+  const [notesStr, setNotesStr] = useState('');
+  const [positionsStr, setPositionsStr] = useState(DEFAULT_VALUE);
+  const positions = convertStringToPositions(positionsStr);
+  const notes = positions && REPOSITION ? convertPositionsToNotes(positions) : convertStringToNotes(notesStr);
 
   return (
     <>
-      <p>Enter comma separated notes (Name/Oct eg C/4) or guitar fret positions (string/fret eg 5/3)</p>
-      <button onClick={() => setTabsCount(tabsCount + 1)}>Generate new tab</button>
-      {new Array(tabsCount).fill('').map((tabForm) => (
-        <TabForm {...tabForm} />
-      ))}
+      Notes: <input onInput={(e) => setNotesStr(e.target.value)} value={notesStr} disabled={positionsStr.length} />
+      Positions:{' '}
+      <input onInput={(e) => setPositionsStr(e.target.value)} value={positionsStr} disabled={notesStr.length} />
+      <br />
+      {!!(notes?.length || positions?.length) && <GuitarTab notes={notes} positions={!REPOSITION && positions} />}
     </>
   );
 }

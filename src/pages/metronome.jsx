@@ -27,6 +27,7 @@ export default function MetronomePage() {
 
   return (
     <>
+      <p>Javascript setInterval is not the most accurate time keeper.</p>
       <MetronomeForm onSubmit={handleSubmit} />
       {tempo && `Current tempo: ${tempo}`}
       {beats && <Metronome beats={beats} tempo={tempo} loop beep />}
