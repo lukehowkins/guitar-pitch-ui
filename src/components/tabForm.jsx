@@ -1,3 +1,4 @@
+import './tabForm.scss';
 import { useState } from 'react';
 import GuitarTab from '../components/guitarTab';
 import { getNoteInfo, shiftNote } from '../services/notes';
@@ -56,12 +57,13 @@ export default function TabForm() {
   const notes = positions && REPOSITION ? convertPositionsToNotes(positions) : convertStringToNotes(notesStr);
 
   return (
-    <>
-      Notes: <input onInput={(e) => setNotesStr(e.target.value)} value={notesStr} disabled={positionsStr.length} />
-      Positions:{' '}
-      <input onInput={(e) => setPositionsStr(e.target.value)} value={positionsStr} disabled={notesStr.length} />
-      <br />
+    <div className="tab-form">
+      <p>
+        Notes: <input onInput={(e) => setNotesStr(e.target.value)} value={notesStr} disabled={positionsStr.length} />{' '}
+        Positions:{' '}
+        <input onInput={(e) => setPositionsStr(e.target.value)} value={positionsStr} disabled={notesStr.length} />
+      </p>
       {!!(notes?.length || positions?.length) && <GuitarTab notes={notes} positions={!REPOSITION && positions} />}
-    </>
+    </div>
   );
 }
