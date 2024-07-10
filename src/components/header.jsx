@@ -12,8 +12,8 @@ export default function Header() {
 
   return (
     <div className="header">
-      <h1>Guitar training</h1>
-      <nav>
+      <h1 className="header__title">Guitar training</h1>
+      <nav className="header__nav">
         <NavLink className={getClassName} to={HOME_PATH}>
           Home
         </NavLink>
